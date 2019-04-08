@@ -9,7 +9,7 @@ const passport = require('passport');
 
 //Load Input Validation
 const validateRegisterInput = require('../../validation/register');
-const validateRegistrationInput = require('../../validation/login')
+const validateLoginInput = require('../../validation/login')
 
 //Load User model
 const User = require('../../models/User');
@@ -20,7 +20,7 @@ const User = require('../../models/User');
 
 router.get('/test', (req, res) => res.json({msg: "Users Works"}));
 
-//@route        GET api/users/test
+//@route        POST api/users/register
 //@description  Tests post route
 //@access       Public
 
@@ -72,7 +72,7 @@ router.post('/register', (req, res) => {
 
 
 
-//@route        GET api/users/login
+//@route        POST api/users/login
 //@description  Login User / Return JWT Token
 //@access       Public
 
@@ -119,8 +119,8 @@ router.post('/login', (req, res) => {
                         });
 
                     } else {
-                        errors.password = "Password Incorect";
-                        return res.status(400).json();
+                        errors.password = "Password Incorrect";
+                        return res.status(400).json(errors);
                     }
                 });
         });

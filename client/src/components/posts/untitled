@@ -1,0 +1,67 @@
+  constructor(props) {
+    super(props);
+    this.state = {
+      likes: 0,
+      dislikes: 0,
+      errors: {}
+    };
+
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.errors) {
+      this.setState({ errors: nextProps.errors });
+    }
+
+    if(nextProps.post) {
+      this.setState({likes: nextProps.post.likes.length});
+      console.log('From component will receive props');
+      console.log(nextProps.post.likes.length);
+    }
+
+  }
+
+
+
+
+  componentDidMount () {
+    this.props.getProfiles();
+}
+
+findUserLike(likes) {
+  const { auth } = this.props;
+  //console.log(likes.filter(like => like.user === auth.user.id).length );
+  if (likes.filter(like => like.user === auth.user.id).length > 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+  onDeleteClick(id) {
+    this.props.deletePost(id);
+    this.props.history.push('/feed');
+  }
+
+  onLikeClick(id) {
+    this.props.addLike(id);
+
+    // this.setState(prevState => {
+    //   return {
+    //     likes: prevState.likes + 1,
+    //   }
+    // })
+    console.log('On click like');
+    console.log(this.state.likes)
+//    this.props.history.push(`/post/${id}`);
+  }
+
+  onUnlikeClick(id) {
+    this.props.removeLike(id);
+
+    // this.setState(prevState => {
+    //   return {
+    //     likes: prevState.likes - 1,
+    //   }
+    // })
+  }

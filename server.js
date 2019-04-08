@@ -7,6 +7,12 @@ const posts = require('./routes/api/posts');
 const profile = require('./routes/api/profile');
 const users = require('./routes/api/users');
 
+var flash = require('connect-flash');
+var cookieParser = require('cookie-parser');
+var session = require('express-session');
+
+var api = express.Router();
+
 const app = express();
 
 
@@ -37,6 +43,29 @@ app.use('/api/posts',posts);
 app.use('/api/profile',profile);
 app.use('/api/users',users);
 
+
+// Middleware error handler for json response
+// function handleError(err,req,res,next){
+//     var output = {
+//         error: {
+//             name: err.name,
+//             message: err.message,
+//             text: err.toString()
+//         }
+//     };
+//     var statusCode = err.status || 500;
+//     res.status(statusCode).json(output);
+// }
+// // error handling middleware last
+// api.use( [
+//     handleError
+//     ] );
+
+//Flash middleware
+
+    // app.use(cookieParser('keyboard cat'));
+    // app.use(session({ cookie: { maxAge: 60000 }}));
+    // app.use(require('flash')());
 
 
 const port = process.env.PORT || 5000; 
