@@ -1,6 +1,8 @@
 # sen
 First install npm, node and create-react-app
 
+setup mongodb from config/keys.js
+
 Pull the request
 Get into the sen folder in terminal
 Write "npm install" in the terminal to install dependencies
