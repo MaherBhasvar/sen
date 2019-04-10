@@ -10,8 +10,8 @@ import {getProfileByHandle} from '../../actions/profileActions';
 class Login extends Component {
     
     state = {
-        email: 'maher.daiict@gmail.com',
-        password: '12345',
+        email: 'test2@test2.com',
+        password: 'test123',
         errors: {},
     };
 

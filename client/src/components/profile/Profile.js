@@ -20,8 +20,12 @@ class Profile extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.profile.profile === null && this.props.profile.loading) {
-      //this.props.history.push('/not-found');
-    }
+      this.props.history.push('/not-found');
+    } 
+  }
+
+  updateProfile() {
+    this.props.getProfileByHandle(this.props.match.params.handle);
   }
 
   render() {
@@ -29,6 +33,8 @@ class Profile extends Component {
     const { profile, loading } = this.props.profile;
     const {auth} = this.props;
     const {user} = this.props.auth;
+
+    //handle of profile state !== handle of url
 
 
 
@@ -66,6 +72,10 @@ class Profile extends Component {
       let editProfile = null;
       //edit-profile button while viewing profile (profile.user._id === auth.user.id || 
       if(this.props.auth.isAuthenticated && this.props.match.params.handle === auth.user.handle) {
+        if(profile.handle !== this.props.match.params.handle) {
+          this.updateProfile();
+        }
+
         console.log("true");
         editProfile =(
           <div className="col-md-6" >

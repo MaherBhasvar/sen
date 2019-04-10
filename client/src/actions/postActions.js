@@ -4,6 +4,7 @@ import {ADD_POST, GET_ERRORS, GET_POSTS,  POST_LOADING, DELETE_POST, GET_POST, C
 
 //add post
 export const addPost = postData => dispatch => {
+  dispatch(clearErrors());
     axios 
         .post('/api/posts', postData)
         .then (res => 
@@ -20,6 +21,7 @@ export const addPost = postData => dispatch => {
 
 // Get Posts
 export const getPosts = () => dispatch => {
+  dispatch(clearErrors());
     dispatch(setPostLoading());
     axios
       .get('/api/posts')
@@ -40,6 +42,7 @@ export const getPosts = () => dispatch => {
   
 // Get Post
 export const getPost = id => dispatch => {
+  dispatch(clearErrors());
     dispatch(setPostLoading());
     axios
       .get(`/api/posts/${id}`)
@@ -60,6 +63,7 @@ export const getPost = id => dispatch => {
   
 // Delete Post
 export const deletePost = id => dispatch => {
+  dispatch(clearErrors());
     axios
       .delete(`/api/posts/${id}`)
       .then(res =>
@@ -78,6 +82,7 @@ export const deletePost = id => dispatch => {
   
   // Add Like
   export const addLike = id => dispatch => {
+    dispatch(clearErrors());
     axios
       .post(`/api/posts/like/${id}`)
       .then(res => dispatch(getPosts()) )
@@ -91,6 +96,7 @@ export const deletePost = id => dispatch => {
   
   // Remove Like
   export const removeLike = id => dispatch => {
+    dispatch(clearErrors());
     axios
       .post(`/api/posts/unlike/${id}`)
       .then(res => dispatch(getPosts()) )
@@ -109,6 +115,7 @@ export const deletePost = id => dispatch => {
 
   // Delete Post Comment
 export const deletePostComment = id => dispatch => {
+  dispatch(clearErrors());
   axios
     .delete(`/api/posts/${id}`)
     .then(res =>
@@ -127,6 +134,7 @@ export const deletePostComment = id => dispatch => {
 
 // Add Like Comment
 export const addLikeComment = id => dispatch => {
+  dispatch(clearErrors());
   axios
     .post(`/api/posts/like/${id}`)
     .then(res => dispatch(getPost(id)) )
@@ -140,6 +148,7 @@ export const addLikeComment = id => dispatch => {
 
 // Remove Like Comment
 export const removeLikeComment = id => dispatch => {
+  dispatch(clearErrors());
   axios
     .post(`/api/posts/unlike/${id}`)
     .then(res => dispatch(getPost(id)) )
@@ -178,6 +187,7 @@ export const addComment = (postId, commentData) => dispatch => {
 
 // Delete Comment
 export const deleteComment = (postId, commentId) => dispatch => {
+  dispatch(clearErrors());
   axios
     .delete(`/api/posts/comment/${postId}/${commentId}`)
     .then(res =>

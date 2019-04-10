@@ -1,18 +1,20 @@
 import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
-import  {GET_ERRORS, SEARCH_RESULT ,SEARCH_LOADING, SEARCH_TERM} from './types';
+import  {GET_ERRORS, SEARCH_RESULT ,SEARCH_LOADING, SEARCH_TERM, CLEAR_ERRORS} from './types';
 
 
 // Set loading state
-export const setSearchLoading = () => {
+export const setSearchLoading = () => dispatch => {
+  dispatch(clearErrors());
     return {
       type: SEARCH_LOADING
     };
   };
 
 // Set Search Ter, loading state
-export const setSearchTerm = (searchData) => {
+export const setSearchTerm = (searchData) => dispatch => {
+  dispatch(clearErrors());
     return {
       type: SEARCH_TERM,
       payload: searchData
@@ -20,6 +22,7 @@ export const setSearchTerm = (searchData) => {
   };
 
 export const newSearch = (searchData, history) => dispatch => {
+  dispatch(clearErrors());
     dispatch(setSearchLoading());
     dispatch(setSearchTerm(searchData));
 
@@ -37,4 +40,11 @@ export const newSearch = (searchData, history) => dispatch => {
         })
         );
     
+};
+
+// Clear errors
+export const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS
+  };
 };

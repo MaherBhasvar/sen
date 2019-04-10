@@ -58,7 +58,7 @@ router.get('/handle/:handle', (req, res)=> {
             }
             res.json(profile);
         })
-        .catch(err => res.status(404).json({profile: 'There is no such profile'}));
+        .catch(err => res.status(404));
 });
 
 //@route        GET api/profile/user/:user_id
@@ -77,7 +77,7 @@ router.get('/user/:user_id', (req, res)=> {
             }
             res.json(profile);
         })
-        .catch(err => res.status(404).json({profile: 'There is no such profile'}));
+        .catch(err => res.status(404));
 })
 
 //@route        GET api/profile/all
@@ -95,7 +95,7 @@ router.get('/all', (req,res) => {
         }
         res.json(profile);
     })
-    .catch(err => res.status(404).json({profile: 'There are no profiles'}));
+    .catch(err => res.status(404));
 })
 
 
