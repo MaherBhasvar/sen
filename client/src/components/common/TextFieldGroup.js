@@ -25,6 +25,7 @@ const TextFieldGroup = ({
           onChange={onChange}
           disabled={disabled}
         />
+        
         {info && <small className="form-text text-muted">{info}</small>}
         {error && (
           <div className="invalid-feedback">{error}</div>
@@ -36,7 +37,7 @@ const TextFieldGroup = ({
 TextFieldGroup.propTypes = {
     name: PropTypes.string.isRequired,
     placeholder: PropTypes.string,
-    value: PropTypes.string.isRequired,
+//    value: PropTypes.string.isRequired,
     info: PropTypes.string,
     error: PropTypes.string,
     type: PropTypes.string.isRequired,

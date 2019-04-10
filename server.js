@@ -6,6 +6,7 @@ const passport = require('passport');
 const posts = require('./routes/api/posts');
 const profile = require('./routes/api/profile');
 const users = require('./routes/api/users');
+const search = require('./routes/api/search');
 
 var flash = require('connect-flash');
 var cookieParser = require('cookie-parser');
@@ -42,6 +43,7 @@ mongoose.connect(db, { useNewUrlParser: true })
 app.use('/api/posts',posts);
 app.use('/api/profile',profile);
 app.use('/api/users',users);
+app.use('/api/search',search);
 
 
 // Middleware error handler for json response

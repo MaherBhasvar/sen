@@ -88,7 +88,7 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
                     post.remove().then(() => res.json({success: true}));
                 })
                 .catch(err => res.status(404).json({postnotfound: 'No post found'}));
-        })
+        }).catch(err => {console.log("Error"); res.status(400).json(err)});
 });
 
 
@@ -99,9 +99,15 @@ router.post(
     '/like/:id',
     passport.authenticate('jwt', { session: false }),
     (req, res) => {
+        //check for the owner
+        if(req.user === null) {
+            return res.status(401).json({notauthorised: 'User not authorised'});
+        }
       Profile.findOne({ user: req.user.id }).then(profile => {
         Post.findById(req.params.id)
           .then(post => {
+            
+
             if (
               post.likes.filter(like => like.user.toString() === req.user.id)
                 .length > 0
@@ -117,7 +123,7 @@ router.post(
             post.save().then(post => res.json(post));
           })
           .catch(err => res.status(404).json({ postnotfound: 'No post found' }));
-      });
+      }).catch(err => {console.log("Error"); res.status(400).json(err)});;
     }
   );
 
@@ -125,10 +131,15 @@ router.post(
 //@description  unLike Post
 //@access       Private
 router.post('/unlike/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    //check for the owner
+    if(req.user === null) {
+        return res.status(401).json({notauthorised: 'User not authorised'});
+    }
     Profile.findOne({user: req.user.id})
         .then(profile => {
             Post.findById(req.params.id)
                 .then(post => {
+
                     if(post.likes.filter(like => like.user.toString()=== req.user.id ).length === 0 ) {
                         return res.status(400).json({noliked: 'you have not liked this post'});
                     }
@@ -146,7 +157,7 @@ router.post('/unlike/:id', passport.authenticate('jwt', {session: false}), (req,
                     console.log(post);
                 })
                 .catch(err => res.status(404).json({postnotfound: 'No post found'}));
-        })
+        }).catch(err => {console.log("Error"); res.status(400).json(err)});
 });
 
 //@route        POST api/posts/comment/:id
@@ -203,6 +214,10 @@ router.post('/unlike/:id', passport.authenticate('jwt', {session: false}), (req,
         '/comment/:id',
         passport.authenticate('jwt', { session: false }),
         (req, res) => {
+            //check for the owner
+            if(req.user === null) {
+                return res.status(401).json({notauthorised: 'User not authorised'});
+            }
           const { errors, isValid } = validateCommentInput(req.body);
       
           // Check Validation
@@ -210,23 +225,29 @@ router.post('/unlike/:id', passport.authenticate('jwt', {session: false}), (req,
             // If any errors, send 400 with errors object
             return res.status(400).json(errors);
           }
-      
-          Post.findById(req.params.id)
-            .then(post => {
-              const newComment = {
-                text: req.body.text,
-                name: req.body.name,
-                avatar: req.body.avatar,
-                user: req.user.id
-              };
-      
-              // Add to comments array
-              post.comments.unshift(newComment);
-      
-              // Save
-              post.save().then(post => res.json(post));
+
+          Profile.findOne({user: req.user.id})
+            .then(profile => {
+                Post.findById(req.params.id)
+                .then(post => {
+                  const newComment = {
+                    text: req.body.text,
+                    name: req.body.name,
+                    avatar: req.body.avatar,
+                    user: req.user.id
+                  };
+          
+                  // Add to comments array
+                  post.comments.unshift(newComment);
+          
+                  // Save
+                  post.save().then(post => res.json(post));
+                })
+                .catch(err => res.status(404).json({ postnotfound: 'No post found' }));
             })
-            .catch(err => res.status(404).json({ postnotfound: 'No post found' }));
+            .catch(err => res.status(401).json({notauthorised: 'User not authorised'}))
+      
+
         }
       );
 

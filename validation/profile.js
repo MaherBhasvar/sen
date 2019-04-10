@@ -6,29 +6,18 @@ module.exports = function validateLoginInput(data) {
  
 
     data.handle = !isEmpty(data.handle) ? data.handle: '';
-    data.status = !isEmpty(data.status) ? data.status: '';
-    data.skills = !isEmpty(data.skills) ? data.skills: '';
+    data.interests = !isEmpty(data.interests) ? data.interests: '';
 
     if(!Validator.isLength(data.handle, {min:2, max:40})) {
-        errors.handle = 'Handle needs to be between 2 and 4 char';
+        errors.handle = 'Handle needs to be between 2 and 40 char';
     }
 
     if(Validator.isEmpty(data.handle)) {
         errors.handle = 'Profile handle is Required';
     }
 
-    if(Validator.isEmpty(data.status)) {
-        errors.status = 'Status fields is Required';
-    }
-
-    if(Validator.isEmpty(data.skills)) {
-        errors.skills = 'skills fields is Required';
-    }
-
-    if(!isEmpty(data.website)) {
-        if(!isValidator.isURL(data.website)) {
-            error.website = 'not a valid URL';
-        }
+    if(Validator.isEmpty(data.interests)) {
+        errors.interests = 'Interests are Required';
     }
 
     if(!isEmpty(data.facebook)) {

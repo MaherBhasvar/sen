@@ -12,15 +12,10 @@ import {newSearch} from '../../actions/searchActions';
 import { withRouter } from "react-router-dom";
 
 class Navbar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      search:'',
-      errors: {}
-    };
 
-  //  this.onChange = this.onChange.bind(this);
-  //  this.onSubmit = this.onSubmit.bind(this);
+  state = {
+    search: '',
+    errors: {},
   }
 
   componentWillReceiveProps(newProps) {
@@ -34,12 +29,13 @@ class Navbar extends Component {
 
 //    const { user } = this.props.auth;
 
-    const search = {
-      search: this.state.search,
+    const searchTerm = {
+      ...this.state,
     };
 
-    this.props.newSearch(search);
+    this.props.newSearch(searchTerm, this.props.history);
     //this.setState({ text: '', url:'' });
+    this.props.history.push(`/search=${this.state.search}`)
   }
 
   onChange(e) {
@@ -57,30 +53,36 @@ class Navbar extends Component {
     render () {
       const { errors } = this.state;
       const {isAuthenticated, user} = this.props.auth;
+
+      const {profile} = this.props.profile;
+
+      const searchBar =  (      
+      <li className="nav-item">
+        <form onSubmit={e => this.onSubmit(e)}>
+          <div className="form-group">
+          <TextFieldGroup 
+            placeholder="Search"
+            name="search"
+            type="search"
+            value={this.state.search}
+            onChange={e => this.onChange(e)}
+            error={errors.search}
+          />
+          </div>
+          {/* <button type="submit" className="btn btn-dark">
+          Submit
+          </button> */}
+        </form>
+      </li>);
+
       const authLinks = (
         <ul className="navbar-nav ml-auto">
-          <li className="nav-item">
-            <form onSubmit={e => this.onSubmit(e)}>
-              <div className="form-group">
-              <TextFieldGroup 
-                placeholder="Search"
-                name="search"
-                type="search"
-                value={this.state.search}
-                onChange={e => this.onChange(e)}
-                error={errors.name}
-              />
-              </div>
-              {/* <button type="submit" className="btn btn-dark">
-              Submit
-              </button> */}
-            </form>
-          </li>
+          {searchBar}
           <li className="nav-item">
             <Link className="nav-link" to="/feed">Feed</Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/dashboard">Profile</Link>
+            <Link className="nav-link" to={`/profile/${user.handle}`}>Profile</Link>
           </li>
           <li className="nav-item">
             <a href="" onClick={this.onLogoutClick.bind(this)} className="nav-link">
@@ -97,21 +99,7 @@ class Navbar extends Component {
       );
       const guestLinks = (
         <ul className="navbar-nav ml-auto">
-          <li className="nav-item">
-            <form onSubmit={this.onSubmit}>
-              <div className="form-group">
-              <TextFieldGroup 
-                placeholder="Search"
-                name="search"
-                type="search"
-                value={this.state.name}
-                onChange={e => this.onChange(e)}
-                error={errors.name}
-              />
-              </div>
-
-            </form>
-          </li>        
+          {searchBar}     
         <li className="nav-item">
             <Link className="nav-link" to="/feed">Feed</Link>
           </li>
@@ -157,7 +145,8 @@ Navbar.propTypes = {
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  errors:state.errors
+  errors: state.errors,
+  profile: state.profile
 });
 
 export default connect(mapStateToProps, {logoutUser, clearCurrentProfile, newSearch}) (withRouter(Navbar));

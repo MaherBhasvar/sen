@@ -10,6 +10,7 @@ class Register extends Component {
 
     state = {
         name: '',
+        handle: '',
         email: '',
         password: '',
         password2:'',
@@ -62,6 +63,14 @@ class Register extends Component {
                       value={this.state.name}
                       onChange={e => this.onChange(e)}
                       error={errors.name}
+                    />
+                    <TextFieldGroup
+                    placeholder="* Profile Handle"
+                    name="handle"
+                    value={this.state.handle}
+                    onChange={e => this.onChange(e)}
+                    error={errors.handle}
+                    info="A unique handle for your profile URL. Your full name, company name, nickname"
                     />
                     <TextFieldGroup 
                       placeholder="Email Address"
@@ -132,7 +141,8 @@ Register.propTypes = {
 const mapStateToProps = (state) => (
     {
         auth:state.auth,
-        errors:state.errors
+        errors:state.errors,
+        
     }
 )
 

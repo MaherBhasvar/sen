@@ -9,10 +9,12 @@ const passport = require('passport');
 
 //Load Input Validation
 const validateRegisterInput = require('../../validation/register');
-const validateLoginInput = require('../../validation/login')
+const validateLoginInput = require('../../validation/login');
 
 //Load User model
 const User = require('../../models/User');
+const Profile = require('../../models/Profile');
+
 
 //@route        GET api/users/test
 //@description  Tests post route
@@ -37,6 +39,13 @@ router.post('/register', (req, res) => {
 
     User.findOne({email : req.body.email})
         .then(user => {
+            //check if handle exists
+            Profile.findOne({handle: req.body.handle}).then(profile => {
+                if (profile) {
+                    errors.handle = 'That handle already exists';
+                    return res.status(400).json(errors);
+                }
+            }).catch(err => {console.log("err"); res.status(400).json(err)});;
             if (user) {
                 errors.email = "Email already exists";
                 return res.status(400).json(errors);
@@ -47,24 +56,34 @@ router.post('/register', (req, res) => {
                     name: req.body.name,
                     email: req.body.email,
                     avatar,
+                    handle: req.body.handle,
                     password: req.body.password,
                 });
+
+                const newProfile = {
+                    handle: req.body.handle,
+                    user: {...newUser}, 
+                    interests: [],
+                    location: '',
+                    social: {},
+                };
+                //new Profile(newProfile).save().then(profile => console.log("profile added successfully")).catch(err => {console.log("err in adding profile"); res.status(400).json(err)});
 
                 bcrypt.genSalt(10, (err, salt) => {
                     bcrypt.hash(newUser.password, salt, (err, hash) => {
                         if (err) throw err;
                         newUser.password = hash;
+                        
                         newUser.save()
                             .then(user => res.json(user))
                             .catch( err => console.log(err));
                     });
                 });
             }
-        })
+        }).catch(err => {console.log("Error"); res.status(400).json(err)});
     //check email in the body of the request coming from front end
     //this  is done so that a registered user do not registers himself again
     //body-parser needed to access
-
 } );
 //npm install gravatar
 
@@ -104,7 +123,7 @@ router.post('/login', (req, res) => {
                         //res.json({msg: "Success"});
 
                         //User Matched Creating Payload
-                        const payload = {id: user.id, name: user.name, avatar: user.avatar};
+                        const payload = {id: user.id, name: user.name, avatar: user.avatar, handle: user.handle};
 
                         //Signed Token
                         jwt.sign(
@@ -122,8 +141,8 @@ router.post('/login', (req, res) => {
                         errors.password = "Password Incorrect";
                         return res.status(400).json(errors);
                     }
-                });
-        });
+                }).catch(err => {console.log("Error"); res.status(400).json(err)});;
+        }).catch(err => {console.log("Error"); res.status(400).json(err)});;
 });
 
 
@@ -132,12 +151,12 @@ router.post('/login', (req, res) => {
 //@description  Return Current User
 //@access       Private
 
-router.get(
-    '/current',
-    passport.authenticate('jwt', {session: false}),
-    (req, res) => {
-        //console.log(res);
-        res.json({id: req.user.id, name: req.user.name, email: req.user.email})}
-    );
+// router.get(
+//     '/current',
+//     passport.authenticate('jwt', {session: false}),
+//     (req, res) => {
+//         //console.log(res);
+//         res.json({id: req.user.id, name: req.user.name, email: req.user.email}); }
+//     );
 
 module.exports = router;

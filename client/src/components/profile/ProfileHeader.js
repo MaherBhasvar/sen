@@ -20,15 +20,15 @@ class ProfileHeader extends Component {
             </div>
             <div className="text-center">
               <h1 className="display-4 text-center">{profile.user.name}</h1>
-              <p className="lead text-center">
+              {/* <p className="lead text-center">
                 {profile.status}{' '}
                 {isEmpty(profile.company) ? null : (
                   <span>at {profile.company}</span>
                 )}
-              </p>
+              </p> */}
               {isEmpty(profile.location) ? null : <p>{profile.location}</p>}
               <p>
-                {isEmpty(profile.website) ? null : (
+                {/* {isEmpty(profile.website) ? null : (
                   <a
                     className="text-white p-2"
                     href={profile.website}
@@ -36,7 +36,7 @@ class ProfileHeader extends Component {
                   >
                     <i className="fas fa-globe fa-2x" />
                   </a>
-                )}
+                )} */}
 
                 {isEmpty(profile.social && profile.social.twitter) ? null : (
                   <a

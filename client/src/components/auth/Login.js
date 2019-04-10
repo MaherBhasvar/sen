@@ -5,6 +5,8 @@ import {loginUser} from '../../actions/authActions';
 import classnames from 'classnames';
 import TextFieldGroup from '../common/TextFieldGroup';
 
+import {getProfileByHandle} from '../../actions/profileActions';
+
 class Login extends Component {
     
     state = {
@@ -15,14 +17,15 @@ class Login extends Component {
 
     componentDidMount() {
       if(this.props.auth.isAuthenticated) {
-        this.props.history.push('./dashboard')
+        this.props.getProfileByHandle(this.props.auth.user.handle);
+        this.props.history.push('./feed')
       }
     }
 
     componentWillReceiveProps (nextProps)  {
 
       if(nextProps.auth.isAuthenticated) {
-        this.props.history.push('/dashboard');
+        this.props.history.push('/feed');
       } 
       if(nextProps.errors) {
           this.setState({errors: nextProps.errors});
@@ -92,6 +95,7 @@ class Login extends Component {
 }
 
 Login.propTypes = {
+  getProfileByHandle: PropTypes.func.isRequired,
   loginUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
@@ -102,4 +106,4 @@ const mapStateToProps = state => ({
   errors: state.errors,
 }); 
 
-export default connect(mapStateToProps, {loginUser})(Login);
+export default connect(mapStateToProps, {loginUser, getProfileByHandle})(Login);

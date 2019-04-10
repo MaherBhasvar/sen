@@ -14,12 +14,12 @@ class CreateProfile extends Component  {
     state = {
         displaySocialInputs: false,
         handle: '',
-        company: '',
-        website: '',
+        // company: '',
+        // website: '',
         location: '',
-        status: '',
-        skills: '',
-        githubusername: '',
+        // status: '',
+        interests: '',
+        // githubusername: '',
         bio: '',
         twitter: '',
         facebook: '',
@@ -33,18 +33,22 @@ class CreateProfile extends Component  {
           this.setState({ errors: nextProps.errors });
         }
       }
+    
+    componentDidMount () {
+        this.setState({handle : this.props.auth.user.handle});
+    }
 
     onSubmit(e) {
         e.preventDefault();
 
         const profileData = {
             handle: this.state.handle,
-            company: this.state.company,
-            website: this.state.website,
+            // company: this.state.company,
+            // website: this.state.website,
             location: this.state.location,
-            status: this.state.status,
-            skills: this.state.skills,
-            githubusername: this.state.githubusername,
+            // status: this.state.status,
+            interests: this.state.interests,
+            // githubusername: this.state.githubusername,
             bio: this.state.bio,
             twitter: this.state.twitter,
             facebook: this.state.facebook,
@@ -146,7 +150,7 @@ class CreateProfile extends Component  {
                     error={errors.handle}
                     info="A unique handle for your profile URL. Your full name, company name, nickname"
                     />
-                    <SelectListGroup
+                    {/* <SelectListGroup
                     placeholder="Status"
                     name="status"
                     value={this.state.status}
@@ -170,7 +174,7 @@ class CreateProfile extends Component  {
                     onChange={e => this.onChange(e)}
                     error={errors.website}
                     info="Could be your own website or a company one"
-                    />
+                    /> */}
                     <TextFieldGroup
                     placeholder="Location"
                     name="location"
@@ -180,22 +184,21 @@ class CreateProfile extends Component  {
                     info="City or city & state suggested (eg. Boston, MA)"
                     />
                     <TextFieldGroup
-                    placeholder="* Skills"
-                    name="skills"
-                    value={this.state.skills}
+                    placeholder="* Interests"
+                    name="interests"
+                    value={this.state.interests}
                     onChange={e => this.onChange(e)}
-                    error={errors.skills}
-                    info="Please use comma separated values (eg.
-                        HTML,CSS,JavaScript,PHP"
+                    error={errors.interests}
+                    info="Singing, Dancing, Music, Coding, Reading, Movies, etc"
                     />
-                    <TextFieldGroup
+                    {/* <TextFieldGroup
                     placeholder="Github Username"
                     name="githubusername"
                     value={this.state.githubusername}
                     onChange={e => this.onChange(e)}
                     error={errors.githubusername}
                     info="If you want your latest repos and a Github link, include your username"
-                    />
+                    /> */}
                     <TextAreaFieldGroup
                     placeholder="Short Bio"
                     name="bio"
@@ -242,6 +245,7 @@ CreateProfile.propTypes = {
 const mapStateToProps = state => ({
     profile: state.profile,
     errors: state.errors,
+    auth: state.auth,
 });
 
 export default connect(mapStateToProps, {createProfile})(withRouter(CreateProfile));

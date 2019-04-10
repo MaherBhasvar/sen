@@ -12,51 +12,109 @@ import { getProfileByHandle } from '../../actions/profileActions';
 class Profile extends Component {
   componentDidMount() {
     if (this.props.match.params.handle) {
+      console.log("didmount")
       this.props.getProfileByHandle(this.props.match.params.handle);
+      console.log(this.props.match.params.handle)
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.profile.profile === null && this.props.profile.loading) {
-      this.props.history.push('/not-found');
+      //this.props.history.push('/not-found');
     }
   }
 
   render() {
+    
     const { profile, loading } = this.props.profile;
+    const {auth} = this.props;
+    const {user} = this.props.auth;
+
+
+
+
+
+    //dashboard content is for new users
+
+    let  dashboardContent = (
+      <div>
+          <p className="lead text-muted">Welcome {user.name}</p>
+          <p>You have not yet setup a profile, please add some info</p>
+          <Link to="/create-profile" className="btn btn-lg btn-info">
+          Create Profile
+          </Link>
+      </div>
+    );
+    const dashboard = (
+      <div className="dashboard">
+      <div className="container">
+        <div className="row">
+          <div className="col-md-12">
+          <h1 className="display-4">Profile Setup</h1>
+          {dashboardContent}
+          </div>
+          </div>
+      </div>
+      </div>
+    );
+
     let profileContent;
 
     if (profile === null || loading) {
       profileContent = <Spinner />;
     } else {
+      let editProfile = null;
+      //edit-profile button while viewing profile (profile.user._id === auth.user.id || 
+      if(this.props.auth.isAuthenticated && this.props.match.params.handle === auth.user.handle) {
+        console.log("true");
+        editProfile =(
+          <div className="col-md-6" >
+            <Link to="/edit-profile" className="btn btn-light mb-3 float-right">
+                <i className="fas fa-user-circle text-info mr-1"></i> 
+                Edit Profile
+            </Link>
+        </div>
+        );
+      };
+      //adding profile content
       profileContent = (
         <div>
           <div className="row">
             <div className="col-md-6">
               <Link to="/profiles" className="btn btn-light mb-3 float-left">
-                Back To Profiles
+                Go To Profiles
               </Link>
             </div>
-            <div className="col-md-6" />
+            {editProfile}
           </div>
           <ProfileHeader profile={profile} />
           <ProfileAbout profile={profile} />
-          <ProfileCreds
+          {/* <ProfileCreds
             education={profile.education}
             experience={profile.experience}
           />
           {profile.githubusername ? (
             <ProfileGithub username={profile.githubusername} />
-          ) : null}
+          ) : null} */}
         </div>
       );
     }
+
+    let displayContent;
+    if(profile === null && this.props.match.params.handle === auth.user.handle) {
+      displayContent = dashboard;
+    } else if (profile === null || loading) {
+      displayContent = <Spinner/>;
+    } else {
+      displayContent = profileContent
+    }
+
 
     return (
       <div className="profile">
         <div className="container">
           <div className="row">
-            <div className="col-md-12">{profileContent}</div>
+            <div className="col-md-12">{displayContent}</div>
           </div>
         </div>
       </div>
@@ -70,7 +128,8 @@ Profile.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile
+  profile: state.profile,
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, { getProfileByHandle })(Profile);
