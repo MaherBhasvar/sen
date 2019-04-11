@@ -176,7 +176,7 @@ export const setProfileLoading = () => {
 
 //Clear Profile loading
 export const clearCurrentProfile = () => dispatch => {
-  dispatch(clearErrors());
+//  dispatch(clearErrors());
     return {
         type: CLEAR_CURRENT_PROFILE,
     }

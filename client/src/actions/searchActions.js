@@ -1,12 +1,11 @@
 import axios from 'axios';
-import setAuthToken from '../utils/setAuthToken';
-import jwt_decode from 'jwt-decode';
+
 import  {GET_ERRORS, SEARCH_RESULT ,SEARCH_LOADING, SEARCH_TERM, CLEAR_ERRORS} from './types';
 
 
 // Set loading state
-export const setSearchLoading = () => dispatch => {
-  dispatch(clearErrors());
+export const setSearchLoading = () => {
+//  dispatch(clearErrors()) ;
     return {
       type: SEARCH_LOADING
     };
@@ -22,17 +21,19 @@ export const setSearchTerm = (searchData) => dispatch => {
   };
 
 export const newSearch = (searchData, history) => dispatch => {
-  dispatch(clearErrors());
+//  dispatch(clearErrors());
     dispatch(setSearchLoading());
     dispatch(setSearchTerm(searchData));
 
     console.log(searchData);
     axios.post('/api/search', searchData)
-    .then(res =>             
-        dispatch ({
-        type: SEARCH_RESULT,
-        payload: res.data,
-    }))
+      .then(res => {            
+          dispatch ({
+          type: SEARCH_RESULT,
+          payload: res.data,
+      });
+      history.push(`/search/${searchData.search}`)
+    })
     .catch(err =>
         dispatch({
             type: GET_ERRORS,

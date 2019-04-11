@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import ProfileHeader from './ProfileHeader';
 import ProfileAbout from './ProfileAbout';
-import ProfileCreds from './ProfileCreds';
-import ProfileGithub from './ProfileGithub';
+// import ProfileCreds from './ProfileCreds';
+// import ProfileGithub from './ProfileGithub';
 import Spinner from '../common/Spinner';
 import { getProfileByHandle } from '../../actions/profileActions';
 
@@ -19,9 +19,12 @@ class Profile extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.profile.profile === null && this.props.profile.loading) {
+    if (nextProps.profile.profile === null && this.props.profile.loading && this.props.match.params.handle !== this.props.auth.user.handle) {
       this.props.history.push('/not-found');
-    } 
+    } else if (this.props.match.params.handle === this.props.auth.user.handle && this.props.profile.profile.handle !== this.props.auth.user.handle){
+      // this.props.getProfileByHandle(this.props.match.params.handle);
+      // console.log(this.props.match.params.handle);
+    }
   }
 
   updateProfile() {

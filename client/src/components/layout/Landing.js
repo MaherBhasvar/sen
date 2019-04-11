@@ -7,7 +7,7 @@ import {withRouter} from 'react-router-dom';
 class Landing extends Component {
   componentDidMount() {
     if(this.props.auth.isAuthenticated) {
-      this.props.history.push('/dashboard');
+      this.props.history.push('/feed');
     } else {
       this.props.history.push('/landing');
     }

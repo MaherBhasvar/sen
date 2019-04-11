@@ -10,6 +10,7 @@ import {withRouter} from 'react-router-dom'
 class CommentPostItem extends Component {
   onDeleteClick(id) {
     this.props.deletePostComment(id);
+    this.props.history.push('/feed');
   }
 
   onLikeClick(id) {
@@ -62,7 +63,7 @@ class CommentPostItem extends Component {
                 >
                   <i
                     className={classnames('fas fa-thumbs-up', {
-                      'text-info': post.likes.length
+                      'text-info': this.findUserLike(post.likes)
                     })}
                   />
                   <span className="badge badge-light">{post.likes.length}</span>
@@ -77,11 +78,11 @@ class CommentPostItem extends Component {
                 {window.location.href === 'http://localhost:3000/feed' ?
                   (
                     <Link to={`/post/${post._id}`} className="btn btn-info mr-1">
-                    Make a Comment
+                    Make a Comment <span className="badge badge-light">{post.comments.length}</span>
                     </Link>
                   ) :
                   (
-                    <a href="#text-area" className="btn btn-info mr-1"> Make a Comment</a>
+                    <a href="#text-area" className="btn btn-info mr-1"> Make a Comment <span className="badge badge-light">{post.comments.length}</span></a>
                   )
                 }
                 
@@ -109,9 +110,9 @@ CommentPostItem.defaultProps = {
 
 CommentPostItem.propTypes = {
 
-  deletePost: PropTypes.func.isRequired,
-  addLike: PropTypes.func.isRequired,
-  removeLike: PropTypes.func.isRequired,
+  deletePostComment: PropTypes.func.isRequired,
+  addLikeComment: PropTypes.func.isRequired,
+  removeLikeComment: PropTypes.func.isRequired,
   post: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
 };

@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import TextFieldGroup from '../common/TextFieldGroup';
 import TextAreaFieldGroup from '../common/TextAreaFieldGroup';
 import InputGroup from '../common/InputGroup';
-import SelectListGroup from '../common/SelectListGroup';
+//import SelectListGroup from '../common/SelectListGroup';
 
 import {createProfile, getCurrentProfile} from '../../actions/profileActions';
 import {withRouter, Link} from 'react-router-dom'

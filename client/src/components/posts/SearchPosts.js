@@ -1,12 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import {withRouter} from 'react-router-dom';
 
 import PostFeed from './PostFeed';
 import Spinner from '../common/Spinner';
-
+import {newSearch} from '../../actions/searchActions';
 
 class SearchPosts extends Component {
+  componentDidMount() {
+    if (this.props.match.params.handle) {
+      console.log("didmount")
+      this.props.newSearch(this.props.match.params.handle, this.props.history);
+      console.log(this.props.match.params.handle)
+    }
+  }
 
     state = {
         errors: {}
@@ -51,7 +59,7 @@ class SearchPosts extends Component {
 }
 
 SearchPosts.propTypes = {
-
+  newSearch: PropTypes.func.isRequired,
   search: PropTypes.object.isRequired
 };
 
@@ -60,4 +68,4 @@ const mapStateToProps = state => ({
   errors: state.errors,
 });
 
-export default connect(mapStateToProps, {} )(SearchPosts);
+export default connect(mapStateToProps, {newSearch} )(withRouter(SearchPosts));

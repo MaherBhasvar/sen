@@ -76,7 +76,7 @@ class App extends Component {
               <Route exact path="/not-found" component={NotFound} />
               <Route exact path="/feed" component={Posts} />
               <Route exact path="/post/:id" component={Post} />
-              <Route exact path="/search=:id" component={SearchPosts} />
+              <Route exact path="/search/:id" component={SearchPosts} />
               <Switch>
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
               </Switch>

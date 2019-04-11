@@ -237,8 +237,9 @@ router.post('/unlike/:id', passport.authenticate('jwt', {session: false}), (req,
                     user: req.user.id
                   };
           
+
                   // Add to comments array
-                  post.comments.unshift(newComment);
+                  post.comments.push(newComment);
           
                   // Save
                   post.save().then(post => res.json(post));
