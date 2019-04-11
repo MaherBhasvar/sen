@@ -97,6 +97,18 @@ const ProfileSchema = new Schema ({
     //     },
         
     // ],
+    age: {
+        type: Date,
+        required: true
+      },
+      // Array of strings from here on out
+      followers: [{
+        type: String
+      }],
+      following: [{
+        type: String
+      }],
+
     social: {
         youtube: {
             type: String,

@@ -58,6 +58,7 @@ router.post('/register', (req, res) => {
                     avatar,
                     handle: req.body.handle,
                     password: req.body.password,
+                    notification: {},
                 });
 
                 const newProfile = {

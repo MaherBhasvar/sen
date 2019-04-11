@@ -3,12 +3,28 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const passport = require('passport');
 
+
+const request = require('request');
+const cheerio = require('cheerio');
+const fs = require('fs');
+const path = require("path");
+
 //@route        GET api/posts/test
 //@description  Tests post route
 //@access       Public
 
 const Post = require('../../models/Post');
 const Profile = require('../../models/Profile');
+
+var { Tag } = require('../../models/Tag');
+//const Tag = require('../../models/Tag');
+
+//const Tag = mongoose.model('Tag');
+
+const helper = require('../controllers/helper.js');
+// const getPost = require('./controllers/getPost.js').getPost;
+var computeTF = helper.computeTF;
+var computeTFIDF = helper.computeTFIDF;
 
 const validatePostInput = require('../../validation/post');
 const validateCommentInput = require('../../validation/comment');
@@ -58,15 +74,63 @@ router.post('/', passport.authenticate('jwt', {session: false,}), (req, res) => 
         return res.status(400).json(errors);
     }
 
-    const newPost = new Post({
-        text: req.body.text,
-        url: req.body.url,
-        name: req.body.name,
-        avatar: req.body.avatar,
-        user: req.user.id,
-    });
+    const url = req.body.url;
+    request(url, (error, resp, body) => {
+        if (error) {
+           console.log(error);
+        }
+    
+        let $ =  cheerio.load(body);
+        let rawdata = fs.readFileSync(path.resolve(__dirname, "../IDF_score.json"));
+        let dict = JSON.parse(rawdata);
+        var tf = computeTF(req.body.text + req.body.text + $.text());
+        // arrays of arrays format
+        tfidf_score = computeTFIDF(tf, dict);     // tfidf score in [tag, score] format
+        console.log(tfidf_score.slice(0, 10));
+        console.log('Tags above');
+        const newPost = new Post({
+            text: req.body.text,
+            url: req.body.url,
+            name: req.body.name,
+            avatar: req.body.avatar,
+            user: req.user.id,
+            handle: req.user.handle,
+            tags :  tfidf_score.slice(0, 10)
+        });
+    
+        // Separate storage for tags with scores
+        var pid = newPost.get( "_id" );
+        tfidf_score.slice(0, 10).forEach(element => {
+          Tag.create(
+            { tag: element[0],
+              postid: pid,
+              score: element[1] },
+            (errorInCreation) => {
+             if (errorInCreation) {
+               console.log(errorInCreation);
+             } else {
+               console.log('Tag Added');
+             }
+            }
+           );
+           //newPost.save().then(post => res.json(post));
+        // const newTag = { tag: element[0],
+        //     postid: pid,
+        //     score: element[1] }
+        //  
+        });
 
-    newPost.save().then(post => res.json(post));
+        //newPost.save().then(post => res.json(post));
+        newPost.save().then((doc) => {
+            res.send(doc);
+          }, (e) => {
+            res.status(400).send(e);
+        });
+
+
+        
+    }); 
+
 });
 
 

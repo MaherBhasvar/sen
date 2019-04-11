@@ -8,6 +8,7 @@ import {clearCurrentProfile, getProfileByHandle} from '../../actions/profileActi
 import TextFieldGroup from '../common/TextFieldGroup';
 import {newSearch} from '../../actions/searchActions';
 
+import Dropdown from 'react-bootstrap/Dropdown'
 
 import { withRouter } from "react-router-dom";
 
@@ -62,6 +63,27 @@ class Navbar extends Component {
       const {isAuthenticated, user} = this.props.auth;
 
 //      const {profile} = this.props.profile;
+      let dropdown;
+
+      if (user.notification === null) {
+        dropdown = (
+          <Dropdown>
+          <Dropdown.Toggle variant="outline-primary" id="dropdown-basic" > 
+            Notification
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            {user.notification === null ? (
+              <Dropdown.Item href="">No Notifications</Dropdown.Item>
+            ) : (
+              <div>
+                {user.notification.map(note => <Dropdown.Item href="#/action-1" key="note">Action</Dropdown.Item>)}
+              </div>
+            )}
+          </Dropdown.Menu>
+        </Dropdown>
+        );
+      }
 
       const searchBar =  (      
       <li className="nav-item">
@@ -84,17 +106,18 @@ class Navbar extends Component {
 
       const authLinks = (
         <ul className="navbar-nav ml-auto">
-          {searchBar}
+
+
           <li className="nav-item">
-            <Link className="nav-link" to="/feed">Feed</Link>
+            {dropdown}
           </li>
           <li className="nav-item">
-            <button onClick={this.onProfileClick.bind(this)} className="btn btn-outline-primary">
+            <button onClick={this.onProfileClick.bind(this)} className="btn btn-outline-light">
               <img 
               className="rounded-circle"
                 src={user.avatar} 
                 alt={user.name}
-                style={{width:'25px', marginRight:'5px'}}
+                style={{width:'20px', marginRight:'5px'}}
                 title="You must have a gravatar connected to your email to display an image"/>
                 {' '} Profile
             </button>
@@ -104,23 +127,15 @@ class Navbar extends Component {
           </li> */}
           <li className="nav-item">
             <button onClick={this.onLogoutClick.bind(this)} className="btn btn-outline-danger">
-              <img 
-              className="rounded-circle"
-                src={user.avatar} 
-                alt={user.name}
-                style={{width:'25px', marginRight:'5px'}}
-                title="You must have a gravatar connected to your email to display an image"/>
                 {' '} Logout
             </button>
           </li>
+
         </ul>
       );
       const guestLinks = (
-        <ul className="navbar-nav ml-auto">
-          {searchBar}     
-        <li className="nav-item">
-            <Link className="nav-link" to="/feed">Feed</Link>
-          </li>
+        <ul className="navbar-nav ml-auto  mr-auto">
+            
           <li className="nav-item">
             <Link className="nav-link" to="/register">Sign Up</Link>
           </li>
@@ -131,19 +146,24 @@ class Navbar extends Component {
       );
         return (
             <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
-            <div className="container">
+            <div className="container nav-item navbar-nav mr-auto ">
               <Link className="navbar-brand" to="/landing">NewsLetter</Link>
-              <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#mobile-nav">
-                <span className="navbar-toggler-icon"></span>
-              </button>
-        
+              <Link className="nav-link" to="/profiles"> People</Link>
+              <Link className="nav-link" to="/feed">Feed</Link>
+              {searchBar} 
               <div className="collapse navbar-collapse" id="mobile-nav">
-                <ul className="navbar-nav mr-auto">
+                {/* <ul className="navbar-nav mr-auto">
                   <li className="nav-item">
                     <Link className="nav-link" to="/profiles"> People
                     </Link>
                   </li>
-                </ul>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/feed">Feed</Link>
+                  </li >
+                  <li className="nav-item">
+                  {searchBar} 
+                  </li>
+                </ul> */}
         
                 {isAuthenticated ? authLinks : guestLinks}
 

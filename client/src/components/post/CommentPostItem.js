@@ -29,7 +29,14 @@ class CommentPostItem extends Component {
       return false;
     }
   }
-
+  // findUserDisLike(dislikes) {
+  //   const { auth } = this.props;
+  //   if (dislikes.filter(dislike => dislike.user === auth.user.id).length > 0) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
 
   render() {
@@ -68,13 +75,18 @@ class CommentPostItem extends Component {
                   />
                   <span className="badge badge-light">{post.likes.length}</span>
                 </button>
-                <button
+                {/* <button
                   onClick={this.onUnlikeClick.bind(this, post._id)}
                   type="button"
                   className="btn btn-light mr-1"
                 >
-                  <i className="text-secondary fas fa-thumbs-down" />
-                </button>
+                  <i 
+                  className={classnames('fas fa-thumbs-up', {
+                    'text-info': this.findUserLike(post.likes)
+                  })}
+                  />
+                  <span className="badge badge-light">{post.likes.length}</span>
+                </button> */}
                 {window.location.href === 'http://localhost:3000/feed' ?
                   (
                     <Link to={`/post/${post._id}`} className="btn btn-info mr-1">
