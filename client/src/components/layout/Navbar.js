@@ -8,7 +8,7 @@ import {clearCurrentProfile, getProfileByHandle} from '../../actions/profileActi
 import TextFieldGroup from '../common/TextFieldGroup';
 import {newSearch} from '../../actions/searchActions';
 
-import Dropdown from 'react-bootstrap/Dropdown'
+import Dropdown from 'react-bootstrap/Dropdown';
 
 import { withRouter } from "react-router-dom";
 
