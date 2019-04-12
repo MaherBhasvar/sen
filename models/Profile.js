@@ -97,6 +97,14 @@ const ProfileSchema = new Schema ({
     //     },
         
     // ],
+    isAdmin: {
+        type: Boolean,
+        default: false,
+    },
+    isModerator: {
+        type: Boolean,
+        default: false,
+    },
     age: {
         type: Date,
         required: true

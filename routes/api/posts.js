@@ -171,14 +171,20 @@ router.post(
         Post.findById(req.params.id)
           .then(post => {
             
+            //see if user is already present in likes array
+            if (post.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
+              return res.status(400).json({ alreadyliked: 'User already liked this post' });
+            }
 
-            if (
-              post.likes.filter(like => like.user.toString() === req.user.id)
-                .length > 0
-            ) {
-              return res
-                .status(400)
-                .json({ alreadyliked: 'User already liked this post' });
+            //remove user from dislikes array if present
+            if (post.dislikes.filter(dislike => dislike.user.toString() === req.user.id).length > 0) {
+                //remove user id to likes array
+                const removeIndex = post.dislikes
+                .map(item => item.user.toString())
+                .indexOf(req.user.id);
+            
+                //Splice out of array of likes
+                post.dislikes.splice(removeIndex, 1);
             }
   
             // Add user id to likes array
@@ -191,10 +197,91 @@ router.post(
     }
   );
 
-//@route        POST api/posts/unlike/:id
-//@description  unLike Post
+//@route        POST api/posts/dislike/:id
+//@description  disLike Post
 //@access       Private
-router.post('/unlike/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/dislike/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    //check for the owner
+    if(req.user === null) {
+        return res.status(401).json({notauthorised: 'User not authorised'});
+    }
+    Profile.findOne({user: req.user.id})
+        .then(profile => {
+            Post.findById(req.params.id)
+                .then(post => {
+
+                    //see if user has already present in dislikes array
+                    if (post.dislikes.filter(dislike => dislike.user.toString() === req.user.id).length > 0) {                      
+                        return res.status(400).json({ alreadydisliked: 'User already disliked this post' });
+                      }
+
+                    //see if user is in likes array
+                    if(post.likes.filter(like => like.user.toString()=== req.user.id ).length > 0 ) {
+                        //return res.status(400).json({noliked: 'you have not liked this post'});
+                        //remove user id to likes array
+                        const removeIndex = post.likes
+                            .map(item => item.user.toString())
+                            .indexOf(req.user.id);
+                        
+                        //Splice out of array of likes
+                        post.likes.splice(removeIndex, 1);
+                    }
+
+
+                    //add to the array if dislikes
+                    post.dislikes.unshift({ user: req.user.id });
+                    //Save
+                    post.save().then(post => res.json(post));
+                    console.log(post);
+                })
+                .catch(err => res.status(404).json({postnotfound: 'No post found'}));
+        }).catch(err => {console.log("Error"); res.status(400).json(err)});
+});
+
+//@route        POST api/posts/report/:id
+//@description  report Post
+//@access       Private
+router.post('/report/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    //check for the owner
+    if(req.user === null) {
+        return res.status(401).json({notauthorised: 'User not authorised'});
+    }
+
+    if(req.user.isAdmin === false) {
+        return res.status(401).json({notauthorised: 'User not authorised'});
+    }
+    if(req.user.isModerator === false) {
+        return res.status(401).json({notauthorised: 'User not authorised'});
+    }
+
+    Profile.findOne({user: req.user.id})
+        .then(profile => {
+            Post.findById(req.params.id)
+                .then(post => {
+
+                    //see if user has already present in reports array
+                    if (post.reports.filter(report => report.user.toString() === req.user.id).length > 0) {                      
+                        return res.status(400).json({ alreadyreportd: 'User already reported this post' });
+                      }
+
+
+
+                    //add to the array if reports
+                    post.reports.unshift({ user: req.user.id });
+                    //Save
+                    post.save().then(post => res.json(post));
+                    console.log(post);
+                })
+                .catch(err => res.status(404).json({postnotfound: 'No post found'}));
+        }).catch(err => {console.log("Error"); res.status(400).json(err)});
+});
+
+
+
+//@route        POST api/posts/unlike/:id
+//@description  Remove like from Post
+//@access       Private
+router.post('/removelike/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
     //check for the owner
     if(req.user === null) {
         return res.status(401).json({notauthorised: 'User not authorised'});
@@ -205,7 +292,7 @@ router.post('/unlike/:id', passport.authenticate('jwt', {session: false}), (req,
                 .then(post => {
 
                     if(post.likes.filter(like => like.user.toString()=== req.user.id ).length === 0 ) {
-                        return res.status(400).json({noliked: 'you have not liked this post'});
+                        return res.status(400).json({notliked: 'you have not liked this post'});
                     }
 
                     //remove user id to likes array
@@ -215,6 +302,74 @@ router.post('/unlike/:id', passport.authenticate('jwt', {session: false}), (req,
                     
                     //Splice out of array
                     post.likes.splice(removeIndex, 1);
+
+                    //Save
+                    post.save().then(post => res.json(post));
+                    console.log(post);
+                })
+                .catch(err => res.status(404).json({postnotfound: 'No post found'}));
+        }).catch(err => {console.log("Error"); res.status(400).json(err)});
+});
+
+//@route        POST api/posts/removedislike/:id
+//@description  Remove dislike from Post
+//@access       Private
+router.post('/removedislike/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    //check for the owner
+    if(req.user === null) {
+        return res.status(401).json({notauthorised: 'User not authorised'});
+    }
+    Profile.findOne({user: req.user.id})
+        .then(profile => {
+            Post.findById(req.params.id)
+                .then(post => {
+
+                    if(post.dislikes.filter(dislike => dislike.user.toString()=== req.user.id ).length === 0 ) {
+                        return res.status(400).json({notdisliked: 'you have not disliked this post'});
+                    }
+
+                    //remove user id to dislikes array
+                    const removeIndex = post.dislikes
+                        .map(item => item.user.toString())
+                        .indexOf(req.user.id);
+                    
+                    //Splice out of array
+                    post.dislikes.splice(removeIndex, 1);
+
+                    //Save
+                    post.save().then(post => res.json(post));
+                    console.log(post);
+                })
+                .catch(err => res.status(404).json({postnotfound: 'No post found'}));
+        }).catch(err => {console.log("Error"); res.status(400).json(err)});
+});
+
+
+
+//@route        POST api/posts/removereport/:id
+//@description  Remove report from Post
+//@access       Private
+router.post('/removereport/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    //check for the owner
+    if(req.user === null) {
+        return res.status(401).json({notauthorised: 'User not authorised'});
+    }
+    Profile.findOne({user: req.user.id})
+        .then(profile => {
+            Post.findById(req.params.id)
+                .then(post => {
+
+                    if(post.reports.filter(report => report.user.toString()=== req.user.id ).length === 0 ) {
+                        return res.status(400).json({notreportd: 'you have not reportd this post'});
+                    }
+
+                    //remove user id to reports array
+                    const removeIndex = post.reports
+                        .map(item => item.user.toString())
+                        .indexOf(req.user.id);
+                    
+                    //Splice out of array
+                    post.reports.splice(removeIndex, 1);
 
                     //Save
                     post.save().then(post => res.json(post));
@@ -274,57 +429,81 @@ router.post('/unlike/:id', passport.authenticate('jwt', {session: false}), (req,
     // }
     // );
 
-    router.post(
-        '/comment/:id',
-        passport.authenticate('jwt', { session: false }),
-        (req, res) => {
-            //check for the owner
-            if(req.user === null) {
-                return res.status(401).json({notauthorised: 'User not authorised'});
-            }
-          const { errors, isValid } = validateCommentInput(req.body);
-      
-          // Check Validation
-          if (!isValid) {
-            // If any errors, send 400 with errors object
-            return res.status(400).json(errors);
-          }
 
-          Profile.findOne({user: req.user.id})
-            .then(profile => {
-                Post.findById(req.params.id)
-                .then(post => {
-                  const newComment = {
-                    text: req.body.text,
-                    name: req.body.name,
-                    avatar: req.body.avatar,
-                    user: req.user.id
-                  };
-          
 
-                  // Add to comments array
-                  post.comments.push(newComment);
-          
-                  // Save
-                  post.save().then(post => res.json(post));
-                })
-                .catch(err => res.status(404).json({ postnotfound: 'No post found' }));
-            })
-            .catch(err => res.status(401).json({notauthorised: 'User not authorised'}))
-      
 
+
+/* ******************************************************************************************************* */
+/* ******************************************************************************************************* */
+/* ******************************************************************************************************* */
+// Comment Routes
+/* ******************************************************************************************************* */
+/* ******************************************************************************************************* */
+/* ******************************************************************************************************* */
+
+
+//@route        POST api/posts/comment/:id
+//@description  Comment Post
+//@access       Private
+router.post(
+    '/comment/:id',
+    passport.authenticate('jwt', { session: false }),
+    (req, res) => {
+        //check for the owner
+        if(req.user === null) {
+            return res.status(401).json({notauthorised: 'User not authorised'});
         }
-      );
+        const { errors, isValid } = validateCommentInput(req.body);
+    
+        // Check Validation
+        if (!isValid) {
+        // If any errors, send 400 with errors object
+        return res.status(400).json(errors);
+        }
+
+        Profile.findOne({user: req.user.id})
+        .then(profile => {
+            Post.findById(req.params.id)
+            .then(post => {
+                const newComment = {
+                text: req.body.text,
+                name: req.body.name,
+                avatar: req.body.avatar,
+                user: req.user.id
+                };
+                // Add to comments array
+                post.comments.push(newComment);
+        
+                // Save
+                post.save().then(post => res.json(post));
+            })
+            .catch(err => res.status(404).json({ postnotfound: 'No post found' }));
+        })
+        .catch(err => res.status(401).json({notauthorised: 'User not authorised'}))
+    }
+);
 
 //@route        DELETE api/posts/comment/:id/:comment_id
 //@description  delte a Comment 
 //@access       Private
 router.delete ('/comment/:id/:comment_id', passport.authenticate('jwt', {session:false}), (req, res)=> {
+    //check for the owner
+    if(req.user === null) {
+        return res.status(401).json({notauthorised: 'User not authorised'});
+    }
+
+
+
     Post.findById(req.params.id)
         .then(post => {
             //check to see if comment exists
             if(post.comments.filter(comment => comment._id.toString() === req.params.comment_id).length === 0) {
                 return res.status(404).json({commentnotexists: 'Comment Does not exists'});
+            }
+
+            //check user is the owner
+            if(req.user === post) {
+                return res.status(401).json({notauthorised: 'User not authorised'});
             }
 
             //Get remove index
@@ -340,4 +519,84 @@ router.delete ('/comment/:id/:comment_id', passport.authenticate('jwt', {session
         })
         .catch(err =>res.status(404).json({postnotfound: 'No post found'}));
 });
+
+
+//@route        POST api/posts/comment/reply/:id/:comment_id
+//@description  Reply to Comment Post
+//@access       Private
+
+router.post ('/comment/reply/:id/:comment_id', passport.authenticate('jwt', {session:false}), (req, res)=> {
+    //check for the owner
+    if(req.user === null) {
+        return res.status(401).json({notauthorised: 'User not authorised'});
+    }
+
+    Post.findById(req.params.id)
+        .then(post => {
+            //check to see if comment exists
+            if(post.comments.filter(comment => comment._id.toString() === req.params.comment_id).length === 0) {
+                return res.status(404).json({commentnotexists: 'Comment Does not exists'});
+            }
+
+            //add reply
+
+            //Save
+            post.save().then(post => res.json(post));
+        })
+        .catch(err =>res.status(404).json({postnotfound: 'No post found'}));
+});
+
+//@route        POST api/posts/comment/like/:id/:comment_id
+//@description  like to Comment 
+//@access       Private
+
+router.post ('/comment/like/:id/:comment_id', passport.authenticate('jwt', {session:false}), (req, res)=> {
+    //check for the owner
+    if(req.user === null) {
+        return res.status(401).json({notauthorised: 'User not authorised'});
+    }
+
+    Post.findById(req.params.id)
+        .then(post => {
+            //check to see if comment exists
+            if(post.comments.filter(comment => comment._id.toString() === req.params.comment_id).length === 0) {
+                return res.status(404).json({commentnotexists: 'Comment Does not exists'});
+            }
+
+            //add like
+
+            //Save
+            post.save().then(post => res.json(post));
+        })
+        .catch(err =>res.status(404).json({postnotfound: 'No post found'}));
+});
+
+
+//@route        POST api/posts/comment/dislike/:id/:comment_id
+//@description  dislike to Comment Post
+//@access       Private
+
+router.post ('/comment/dislike/:id/:comment_id', passport.authenticate('jwt', {session:false}), (req, res)=> {
+    //check for the owner
+    if(req.user === null) {
+        return res.status(401).json({notauthorised: 'User not authorised'});
+    }
+
+    Post.findById(req.params.id)
+        .then(post => {
+            //check to see if comment exists
+            if(post.comments.filter(comment => comment._id.toString() === req.params.comment_id).length === 0) {
+                return res.status(404).json({commentnotexists: 'Comment Does not exists'});
+            }
+
+            //add dislike
+
+            //Save
+            post.save().then(post => res.json(post));
+        })
+        .catch(err =>res.status(404).json({postnotfound: 'No post found'}));
+});
+
+
+
 module.exports = router;

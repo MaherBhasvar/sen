@@ -3,22 +3,38 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
-import { deletePostComment, addLikeComment, removeLikeComment,  } from '../../actions/postActions';
+import { deletePostFromView, addLikeFromView, removeLikeFromView, removeDislikeFromView, addDislikeFromView, addReportFromView, removeReportFromView} from '../../actions/postActions';
  
 import {withRouter} from 'react-router-dom'
 
 class CommentPostItem extends Component {
   onDeleteClick(id) {
-    this.props.deletePostComment(id);
+    this.props.deletePostFromView(id);
     this.props.history.push('/feed');
   }
 
-  onLikeClick(id) {
-    this.props.addLikeComment(id);
+  onLikeClick(post) {
+    if(this.findUserLike(post.likes)) {
+      this.props.removeLikeFromView(post._id);
+    } else {
+      this.props.addLikeFromView(post._id);
+    }
   }
 
-  onUnlikeClick(id) {
-    this.props.removeLikeComment(id);
+  onDislikeClick(post) {
+    if(this.findUserDislike(post.dislikes)) {
+      this.props.removeDislikeFromView(post._id);
+    } else {
+      this.props.addDislikeFromView(post._id);
+    }    
+  }
+
+  onReportClick(post) {
+    if(this.findUserReport(post.reports)) {
+      this.props.removeReport(post._id);
+    } else {
+      this.props.addReport(post._id);
+    }    
   }
 
   findUserLike(likes) {
@@ -29,15 +45,22 @@ class CommentPostItem extends Component {
       return false;
     }
   }
-  // findUserDisLike(dislikes) {
-  //   const { auth } = this.props;
-  //   if (dislikes.filter(dislike => dislike.user === auth.user.id).length > 0) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
+  findUserDislike(dislikes) {
+    const { auth } = this.props;
+    if (dislikes.filter(dislike => dislike.user === auth.user.id).length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  findUserReport(reports) {
+    const { auth } = this.props;
+    if (reports.filter(report => report.user === auth.user.id).length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   render() {
     const { post, auth, showActions } = this.props;
@@ -64,7 +87,7 @@ class CommentPostItem extends Component {
             {showActions ? (
               <span>
                 <button
-                  onClick={this.onLikeClick.bind(this, post._id)}
+                  onClick={this.onLikeClick.bind(this, post)}
                   type="button"
                   className="btn btn-light mr-1"
                 >
@@ -75,18 +98,34 @@ class CommentPostItem extends Component {
                   />
                   <span className="badge badge-light">{post.likes.length}</span>
                 </button>
-                {/* <button
-                  onClick={this.onUnlikeClick.bind(this, post._id)}
+                <button
+                  onClick={this.onDislikeClick.bind(this, post)}
                   type="button"
                   className="btn btn-light mr-1"
                 >
                   <i 
-                  className={classnames('fas fa-thumbs-up', {
-                    'text-info': this.findUserLike(post.likes)
+                  className={classnames('fas fa-thumbs-down', {
+                    'text-info': this.findUserDislike(post.dislikes)
                   })}
                   />
-                  <span className="badge badge-light">{post.likes.length}</span>
-                </button> */}
+                  <span className="badge badge-light">{post.dislikes.length}</span>
+                </button>
+                {auth.user.isAdmin || auth.user.isModerator ? (
+                  <div>
+                    <button
+                      onClick={this.onReportClick.bind(this, post)}
+                      type="button"
+                      className="btn btn-light mr-1"
+                    >
+                      <i 
+                      className={classnames('fas fa-flag', {
+                        'text-info': this.findUserReport(post.reports)
+                      })}
+                      />
+                      <span className="badge badge-light">{post.reports.length}</span>
+                    </button>
+                  </div>
+                ) : null}
                 {window.location.href === 'http://localhost:3000/feed' ?
                   (
                     <Link to={`/post/${post._id}`} className="btn btn-info mr-1">
@@ -98,7 +137,7 @@ class CommentPostItem extends Component {
                   )
                 }
                 
-                {post.user === auth.user.id ? (
+                {post.user === auth.user.id || auth.user.isAdmin ? (
                   <button
                     onClick={this.onDeleteClick.bind(this, post._id)}
                     type="button"
@@ -122,9 +161,17 @@ CommentPostItem.defaultProps = {
 
 CommentPostItem.propTypes = {
 
-  deletePostComment: PropTypes.func.isRequired,
-  addLikeComment: PropTypes.func.isRequired,
-  removeLikeComment: PropTypes.func.isRequired,
+  deletePostFromView: PropTypes.func.isRequired,
+  addLikeFromView: PropTypes.func.isRequired,
+
+  removeLikeFromView: PropTypes.func.isRequired,
+
+  removeDislikeFromView: PropTypes.func.isRequired,
+  addDislikeFromView: PropTypes.func.isRequired,
+
+  addReportFromView: PropTypes.func.isRequired,
+  removeReportFromView: PropTypes.func.isRequired,
+
   post: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
 };
@@ -134,6 +181,6 @@ const mapStateToProps = state => ({
   profile: state.profile,
 });
 
-export default connect(mapStateToProps, { deletePostComment, addLikeComment, removeLikeComment, })(
+export default connect(mapStateToProps, { deletePostFromView, addLikeFromView, removeLikeFromView, removeDislikeFromView, addDislikeFromView, removeReportFromView, addReportFromView})(
   withRouter(CommentPostItem)
 );

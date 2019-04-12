@@ -23,7 +23,17 @@ const UserSchema = new Schema ({
         type: String,
         //required: true,
     },
-
+    isAdmin: {
+        type: Boolean,
+        default: false,
+    },
+    isModerator: {
+        type: Boolean,
+        default: false,
+    },
+    Notification: {
+        type: [String],
+    }
 });
 
 module.exports = User = mongoose.model('users', UserSchema);

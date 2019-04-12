@@ -78,43 +78,91 @@ export const deletePost = id => dispatch => {
           payload: err.response.data
         })
       );
-  };
+};
   
-  // Add Like
-  export const addLike = id => dispatch => {
-    dispatch(clearErrors());
-    axios
-      .post(`/api/posts/like/${id}`)
-      .then(res => dispatch(getPosts()) )
-      .catch(err =>
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data
-        })
-      );
-  };
-  
-  // Remove Like
-  export const removeLike = id => dispatch => {
-    dispatch(clearErrors());
-    axios
-      .post(`/api/posts/unlike/${id}`)
-      .then(res => dispatch(getPosts()) )
-      .catch(err =>
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data
-        })
-      );
-  };
+// Add Like
+export const addLike = id => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post(`/api/posts/like/${id}`)
+    .then(res => dispatch(getPosts()) )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+// Add Report
+export const addReport = id => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post(`/api/posts/report/${id}`)
+    .then(res => dispatch(getPosts()) )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+// Add Dislike
+export const addDislike = id => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post(`/api/posts/dislike/${id}`)
+    .then(res => dispatch(getPosts()) )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+// Remove Like
+export const removeLike = id => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post(`/api/posts/removelike/${id}`)
+    .then(res => dispatch(getPosts()) )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+//Remove Dislike
+export const removeDislike = id => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post(`/api/posts/removedislike/${id}`)
+    .then(res => dispatch(getPosts()) )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+//Remove report
+export const removeReport = id => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post(`/api/posts/removereport/${id}`)
+    .then(res => dispatch(getPosts()) )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 
 
 
-
-
-
-  // Delete Post Comment
-export const deletePostComment = id => dispatch => {
+  // Delete Post From View
+export const deletePostFromView = id => dispatch => {
   dispatch(clearErrors());
   axios
     .delete(`/api/posts/${id}`)
@@ -132,8 +180,8 @@ export const deletePostComment = id => dispatch => {
     );
 };
 
-// Add Like Comment
-export const addLikeComment = id => dispatch => {
+// Add Like From View
+export const addLikeFromView = id => dispatch => {
   dispatch(clearErrors());
   axios
     .post(`/api/posts/like/${id}`)
@@ -145,12 +193,11 @@ export const addLikeComment = id => dispatch => {
       })
     );
 };
-
-// Remove Like Comment
-export const removeLikeComment = id => dispatch => {
+// Add Dislike From View
+export const addDislikeFromView = id => dispatch => {
   dispatch(clearErrors());
   axios
-    .post(`/api/posts/unlike/${id}`)
+    .post(`/api/posts/dislike/${id}`)
     .then(res => dispatch(getPost(id)) )
     .catch(err =>
       dispatch({
@@ -159,7 +206,58 @@ export const removeLikeComment = id => dispatch => {
       })
     );
 };
-
+// Add Report From View
+export const addReportFromView = id => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post(`/api/posts/report/${id}`)
+    .then(res => dispatch(getPost(id)) )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+// Remove Like From View
+export const removeLikeFromView = id => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post(`/api/posts/removelike/${id}`)
+    .then(res => dispatch(getPost(id)) )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+// Remove Dislike From View
+export const removeDislikeFromView = id => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post(`/api/posts/removedislike/${id}`)
+    .then(res => dispatch(getPost(id)) )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+// Remove Report From View
+export const removeReportFromView = id => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post(`/api/posts/removereport/${id}`)
+    .then(res => dispatch(getPost(id)) )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 
 
 
