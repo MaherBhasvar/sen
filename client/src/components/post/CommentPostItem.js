@@ -31,9 +31,9 @@ class CommentPostItem extends Component {
 
   onReportClick(post) {
     if(this.findUserReport(post.reports)) {
-      this.props.removeReport(post._id);
+      this.props.removeReportFromView(post._id);
     } else {
-      this.props.addReport(post._id);
+      this.props.addReportFromView(post._id);
     }    
   }
 
@@ -81,7 +81,7 @@ class CommentPostItem extends Component {
           </div>
           <div className="col-md-10">
 
-            <p className="lead">URL: <a href={post.url}>{post.url}</a></p>
+            <p className="lead">URL: <a href={post.url}>{post.headline}</a></p>
             <p className="lead">{post.text}</p>
             
             {showActions ? (
@@ -111,7 +111,7 @@ class CommentPostItem extends Component {
                   <span className="badge badge-light">{post.dislikes.length}</span>
                 </button>
                 {auth.user.isAdmin || auth.user.isModerator ? (
-                  <div>
+                  
                     <button
                       onClick={this.onReportClick.bind(this, post)}
                       type="button"
@@ -124,7 +124,7 @@ class CommentPostItem extends Component {
                       />
                       <span className="badge badge-light">{post.reports.length}</span>
                     </button>
-                  </div>
+                  
                 ) : null}
 
                     <a href="#text-area" className="btn btn-info mr-1"> Make a Comment <span className="badge badge-light">{post.comments.length}</span></a>

@@ -58,7 +58,7 @@ router.post('/register', (req, res) => {
                     avatar,
                     handle: req.body.handle,
                     password: req.body.password,
-                    notification: {},
+                    notification: [],
                 });
 
                 const newProfile = {
@@ -67,6 +67,7 @@ router.post('/register', (req, res) => {
                     interests: [],
                     location: '',
                     social: {},
+                    
                 };
                 //new Profile(newProfile).save().then(profile => console.log("profile added successfully")).catch(err => {console.log("err in adding profile"); res.status(400).json(err)});
 

@@ -65,25 +65,25 @@ class Navbar extends Component {
 //      const {profile} = this.props.profile;
       let dropdown;
 
-      if (user.notification === null) {
-        dropdown = (
-          <Dropdown>
-          <Dropdown.Toggle variant="outline-primary" id="dropdown-basic" > 
-            Notification
-          </Dropdown.Toggle>
+      // if (user.notification !== null) {
+      //   dropdown = (
+      //     <Dropdown>
+      //     <Dropdown.Toggle variant="outline-primary" id="dropdown-basic" > 
+      //       Notification
+      //     </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            {user.notification === null ? (
-              <Dropdown.Item href="">No Notifications</Dropdown.Item>
-            ) : (
-              <div>
-                {user.notification.map(note => <Dropdown.Item href="#/action-1" key="note">Action</Dropdown.Item>)}
-              </div>
-            )}
-          </Dropdown.Menu>
-        </Dropdown>
-        );
-      }
+      //     <Dropdown.Menu>
+      //       {user.notification === null ? (
+      //         <Dropdown.Item href="">No Notifications</Dropdown.Item>
+      //       ) : (
+      //         <div>
+      //           {user.notification.map(note => <Dropdown.Item href="#/action-1" key="note">{note}</Dropdown.Item>)}
+      //         </div>
+      //       )}
+      //     </Dropdown.Menu>
+      //   </Dropdown>
+      //   );
+      // }
 
       const searchBar =  (      
       <li className="nav-item">

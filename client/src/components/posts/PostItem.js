@@ -126,7 +126,7 @@ class PostItem extends Component {
                   <span className="badge badge-light">{post.dislikes.length}</span>
                 </button>
                 {auth.user.isAdmin || auth.user.isModerator ? (
-                  <div>
+   
                     <button
                       onClick={this.onReportClick.bind(this, post)}
                       type="button"
@@ -139,7 +139,7 @@ class PostItem extends Component {
                       />
                       <span className="badge badge-light">{post.reports.length}</span>
                     </button>
-                  </div>
+       
                 ) : null} 
 
                     <Link to={`/post/${post._id}`} className="btn btn-info mr-1">
