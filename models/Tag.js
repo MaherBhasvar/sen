@@ -24,11 +24,12 @@
 
 
 var mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
 var ObjectId = mongoose.Schema.Types.ObjectId;
 
 //storing tag, postid so ten entry with same postid and diff tag 
-
-var Tag = mongoose.model('Tag', {
+const TagSchema = new Schema ({
     tag: {
         type: String,
         required: true
@@ -43,5 +44,6 @@ var Tag = mongoose.model('Tag', {
     }
    
 });
-var Tag = mongoose.model("Tag");
-module.exports = { Tag };
+// var Tag = mongoose.model("Tag");
+// module.exports = { Tag };
+module.exports = Tag = mongoose.model('Tag',TagSchema);

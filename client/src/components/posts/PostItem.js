@@ -90,7 +90,7 @@ class PostItem extends Component {
           </div>
           <div className="col-md-10">
 
-            <p className="lead">URL: <a href={post.url}>{post.url}</a></p>
+            <p className="lead">URL: <a href={post.url}>{post.headline}</a></p>
             <p className="lead">{post.text}</p>
             <p className="lead">Tags: {post.tags.map(tag => (
               <span key={tag[0]}>

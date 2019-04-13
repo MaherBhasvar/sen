@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const passport = require('passport');
-
+const urlparser = require('url');
 
 const request = require('request');
 const cheerio = require('cheerio');
@@ -15,8 +15,7 @@ const path = require("path");
 
 const Post = require('../../models/Post');
 const Profile = require('../../models/Profile');
-
-var { Tag } = require('../../models/Tag');
+const Tag = require('../../models/Tag');
 //const Tag = require('../../models/Tag');
 
 //const Tag = mongoose.model('Tag');
@@ -79,48 +78,65 @@ router.post('/', passport.authenticate('jwt', {session: false,}), (req, res) => 
         if (error) {
            console.log(error);
         }
-    
+        
         let $ =  cheerio.load(body);
         let rawdata = fs.readFileSync(path.resolve(__dirname, "../IDF_score.json"));
         let dict = JSON.parse(rawdata);
         var tf = computeTF(req.body.text + req.body.text + $.text());
+        var headlinetext = url.toString()
+                                .replace('html', '')
+                                .split('/');
+                                
+
+        headlinetext = headlinetext.reduce(function (a, b) { return a.length > b.length ? a : b; });
+        headlinetext = headlinetext
+            .substring(headlinetext.lastIndexOf('/'), headlinetext.length)
+            .replace(/\s+/g, " ")
+            .replace(/[^a-zA-Z0-9 ]/g, " ");
+
         // arrays of arrays format
         tfidf_score = computeTFIDF(tf, dict);     // tfidf score in [tag, score] format
-        console.log(tfidf_score.slice(0, 10));
-        console.log('Tags above');
+        // console.log(tfidf_score.slice(0, 10));
+        // console.log('Tags above');
+        if(headlinetext == null || headlinetext.length<20)
+            headlinetext = url;
         const newPost = new Post({
             text: req.body.text,
             url: req.body.url,
             name: req.body.name,
+            headline: headlinetext,
             avatar: req.body.avatar,
             user: req.user.id,
             handle: req.user.handle,
             tags :  tfidf_score.slice(0, 10)
         });
-    
+        
         // Separate storage for tags with scores
         var pid = newPost.get( "_id" );
         tfidf_score.slice(0, 10).forEach(element => {
-          Tag.create(
-            { tag: element[0],
-              postid: pid,
-              score: element[1] },
-            (errorInCreation) => {
-             if (errorInCreation) {
-               console.log(errorInCreation);
-             } else {
-               console.log('Tag Added');
-             }
-            }
-           );
-           //newPost.save().then(post => res.json(post));
+          var tag1 = new Tag({
+                tag: element[0],
+                postid: pid,
+                score: element[1] 
+            });
+
+            tag1.save().then((doc) => {
+                // res.send(doc);
+                console.log(tag1.tag+'added');
+                }, (e) => {
+                    res.status(400).send(e);
+                });
+        });
+
+
+        //newPost.save().then(post => res.json(post));
         // const newTag = { tag: element[0],
         //     postid: pid,
         //     score: element[1] }
         //  
-        });
-
         //newPost.save().then(post => res.json(post));
+        
+        
         newPost.save().then((doc) => {
             res.send(doc);
           }, (e) => {

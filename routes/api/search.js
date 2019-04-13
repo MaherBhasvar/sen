@@ -9,6 +9,7 @@ const passport = require('passport');
 
 const Post = require('../../models/Post');
 const Profile = require('../../models/Profile');
+const Tag = require('../../models/Tag');
 
 
 
@@ -61,10 +62,59 @@ router.post ('/', (req, res) => {
     }
 
     //return res.json(newObject);
-    Post.find()
-    .sort({date: -1})
-    .then(posts => res.json(posts))
-    .catch(err => res.status(404).json({nopostsfound: 'No posts found'}));
+    // Post.find()
+    // .sort({date: -1})
+    // .then(posts => res.json(posts))
+    // .catch(err => res.status(404).json({nopostsfound: 'No posts found'}));
+    console.log(req.body.search);
+    text = req.body.search
+    .replace(/\s+/g, " ")
+    .replace(/[^a-zA-Z0-9 ]/g, " ")
+    .toLowerCase()
+    .split(" ");
+
+    posts = [];
+    text.forEach(word => {
+        Tag.find({tag: word}, function (err, data1) {
+        if (err) return console.error(err);
+        data1.forEach(element => {
+          Post.find({_id: element.postid}, function(err, data2){
+            if (err) return console.error(err);
+            data2.forEach(result => {
+              console.log(result.link);
+              posts.push(result);
+
+            });
+          });
+        });
+
+      });
+      });
+
+      //not working in sync if I remove setTimeOut because it is returning
+      // response before above code executes try to do it without timeout if possible
+      setTimeout(function () {
+        console.log(posts);
+        var set = new Set();
+        var result = [];
+        posts.forEach(element => {
+          if(!set.has(String(element._id)))
+          {
+            set.add(String(element._id));
+            result.push(element);
+          }
+        });
+        result.sort(function(first, second) {
+          return second.dateTime - first.dateTime;
+        });
+
+        // console.log(set);
+        console.log(result.length);
+        if(result.length == 0)
+            res.status(404).json({nopostsfound: 'No posts found'})
+        else
+            res.send(result);
+      }, 1000);
 
 });
 
