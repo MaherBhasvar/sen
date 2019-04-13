@@ -124,7 +124,15 @@ router.post('/login', (req, res) => {
                         //res.json({msg: "Success"});
 
                         //User Matched Creating Payload
-                        const payload = {id: user.id, name: user.name, avatar: user.avatar, handle: user.handle};
+                        const payload = {
+                            id: user.id, 
+                            name: user.name, 
+                            avatar: user.avatar, 
+                            handle: user.handle,
+                            notification: user.notification,
+                            isAdmin: user.isAdmin,
+                            isModerator: user.isModerator,
+                        };
 
                         //Signed Token
                         jwt.sign(

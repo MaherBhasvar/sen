@@ -31,7 +31,7 @@ const UserSchema = new Schema ({
         type: Boolean,
         default: false,
     },
-    Notification: {
+    notification: {
         type: [String],
     }
 });

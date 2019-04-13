@@ -39,6 +39,47 @@ export const getPosts = () => dispatch => {
       );
   };
 
+export const newSearch = (searchData, history) => dispatch => {
+    dispatch(clearErrors());
+    dispatch(setPostLoading());
+    axios.post('/api/search', searchData)
+      .then(res => {
+        dispatch({
+          type: GET_POSTS,
+          payload: res.data
+        })
+        console.log(res.data);
+        history.push(`/search/${searchData.search}`);
+      }
+      )
+      .catch(err =>
+        dispatch({
+          type: GET_POSTS,
+          payload: null
+        })
+      );
+  };
+
+export const getNewSearch = (search) => dispatch => {
+  dispatch(clearErrors());
+  dispatch(setPostLoading());
+  axios
+    .get(`/api/search/${search}`)
+    .then(res =>{
+      dispatch({
+        type: GET_POSTS,
+        payload: res.data
+      })
+      console.log(res.data);
+    }
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_POSTS,
+        payload: null
+      })
+    );
+}
   
 // Get Post
 export const getPost = id => dispatch => {
@@ -316,3 +357,6 @@ export const clearErrors = () => {
     type: CLEAR_ERRORS
   };
 };
+
+
+

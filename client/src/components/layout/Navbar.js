@@ -6,7 +6,7 @@ import {logoutUser} from '../../actions/authActions';
 import {clearCurrentProfile, getProfileByHandle} from '../../actions/profileActions';
 
 import TextFieldGroup from '../common/TextFieldGroup';
-import {newSearch} from '../../actions/searchActions';
+import {newSearch} from '../../actions/postActions';
 
 import Dropdown from 'react-bootstrap/Dropdown';
 
@@ -35,7 +35,7 @@ class Navbar extends Component {
     const searchTerm = {
       ...this.state,
     };
-
+//    this.props.history.push(`/search/${searchTerm.search}`)
     this.props.newSearch(searchTerm, this.props.history);
     //this.setState({ text: '', url:'' });
     //this.props.history.push(`/search/${this.state.search}`)

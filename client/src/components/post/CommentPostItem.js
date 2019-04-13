@@ -126,17 +126,9 @@ class CommentPostItem extends Component {
                     </button>
                   </div>
                 ) : null}
-                {window.location.href === 'http://localhost:3000/feed' ?
-                  (
-                    <Link to={`/post/${post._id}`} className="btn btn-info mr-1">
-                    Make a Comment <span className="badge badge-light">{post.comments.length}</span>
-                    </Link>
-                  ) :
-                  (
+
                     <a href="#text-area" className="btn btn-info mr-1"> Make a Comment <span className="badge badge-light">{post.comments.length}</span></a>
-                  )
-                }
-                
+
                 {post.user === auth.user.id || auth.user.isAdmin ? (
                   <button
                     onClick={this.onDeleteClick.bind(this, post._id)}
