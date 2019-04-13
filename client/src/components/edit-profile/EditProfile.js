@@ -8,6 +8,7 @@ import InputGroup from '../common/InputGroup';
 //import SelectListGroup from '../common/SelectListGroup';
 
 import {createProfile, getCurrentProfile} from '../../actions/profileActions';
+import {logoutUser} from '../../actions/authActions';
 import {withRouter, Link} from 'react-router-dom'
 import isEmpty from '../../validation/is-empty';
 
@@ -103,7 +104,11 @@ class EditProfile extends Component  {
             youtube: this.state.youtube,
             instagram: this.state.instagram,
           };
-        this.props.createProfile(profileData, this.props.history);
+
+        this.props.createProfile(profileData, this.props.auth.user.handle,this.props.history);
+        if (profileData.handle !== this.props.auth.user.handle) {
+            this.props.logoutUser();
+        }
 
     }
 
@@ -183,7 +188,7 @@ class EditProfile extends Component  {
             <div className="container">
               <div className="row">
                 <div className="col-md-8 m-auto">
-                <Link to="/dashboard" className="btn btn-light">
+                <Link to="/profiles" className="btn btn-light">
                 Go Back
               </Link>
                   <h1 className="display-4 text-center">Edit Your Profile</h1>
@@ -287,6 +292,7 @@ class EditProfile extends Component  {
 };
 
 EditProfile.propTypes = {
+    logoutUser: PropTypes.func.isRequired,
     getCurrentProfile: PropTypes.func.isRequired,
     createProfile: PropTypes.func.isRequired,
     profile: PropTypes.object.isRequired,
@@ -299,4 +305,4 @@ const mapStateToProps = state => ({
     auth: state.auth,
 });
 
-export default connect(mapStateToProps, {createProfile, getCurrentProfile})(withRouter(EditProfile));
+export default connect(mapStateToProps, {createProfile, getCurrentProfile, logoutUser})(withRouter(EditProfile));

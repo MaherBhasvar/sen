@@ -149,18 +149,23 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
         .then(profile => {
 
             if (profile) {
-                Profile.findOne({handle: req.body.handle}).then(profile => {
-                    console.log("profile");
-                    console.log(profile);
-                    if(profile.user=== req.user.id) {
-                        errors.handle = 'That handle already exists';
-                        return res.status(400).json(errors);
-                    } 
-                })
+                // Profile.findOne({handle: req.body.handle}).then(profile => {
+                //     console.log("profile");
+                //     console.log(profile);
+                //     if(profile.user=== req.user.id) {
+                //         errors.handle = 'That handle already exists';
+                //         return res.status(400).json(errors);
+                //     } 
+                // })
                 //update
-                User.findOneAndUpdate ({user: req.user.id}).then(user => {console.log("user updated")}).catch(err => {console.log("Error"); res.status(400).json(err)});;
+                //console.log(profile)
+                User.findOneAndUpdate ({_id: profileFields.user}, {$set: {handle: req.body.handle}})
+                    .then(user => {console.log(user); console.log("user handle updated")})
+                    .catch(err => {console.log("Error"); res.status(400).json(err)});;
                 Profile.findOneAndUpdate ({user: req.user.id}, {$set: profileFields}, {new: true})
-                    .then(profile => res.json(profile)).catch(err => {console.log("Error"); res.status(400).json(err)});;
+                    .then(profile => {console.log(profile); res.json(profile)})
+                    .catch(err => {console.log("Error"); res.status(400).json(err)});
+                    
                 
             } else {
                 //create

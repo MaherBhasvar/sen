@@ -112,6 +112,7 @@ class Navbar extends Component {
             {dropdown}
           </li>
           <li className="nav-item">
+          <span className="px-3 pb-3">
             <button onClick={this.onProfileClick.bind(this)} className="btn btn-outline-light">
               <img 
               className="rounded-circle"
@@ -121,6 +122,7 @@ class Navbar extends Component {
                 title="You must have a gravatar connected to your email to display an image"/>
                 {' '} Profile
             </button>
+            </span>
           </li>
           {/* <li className="nav-item">
             <Link className="nav-link" to={`/profile/${user.handle}`}>Profile</Link>

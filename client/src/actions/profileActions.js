@@ -69,11 +69,18 @@ export const getProfiles = () => dispatch => {
   };
 
 //Create Profile
-export const createProfile = (profileData, history) => dispatch =>  {
+export const createProfile = (profileData, oldHandle, history) => dispatch =>  {
   dispatch(clearErrors());
     axios
         .post('/api/profile', profileData)
-        .then(res => history.push(`/profile/${profileData.handle}`))
+        .then(res => {
+          if (profileData.handle === oldHandle){
+            history.push(`/profile/${profileData.handle}`)
+          }
+          else {
+            history.push(`/login`);
+          }
+        })
         .catch(err =>
             dispatch({
                 type: GET_ERRORS,

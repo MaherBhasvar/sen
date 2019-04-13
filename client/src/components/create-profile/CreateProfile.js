@@ -8,6 +8,7 @@ import InputGroup from '../common/InputGroup';
 //import SelectListGroup from '../common/SelectListGroup';
 
 import {createProfile} from '../../actions/profileActions';
+import {loginUser} from '../../actions/authActions';
 import {withRouter} from 'react-router-dom'
 
 class CreateProfile extends Component  {
@@ -56,6 +57,7 @@ class CreateProfile extends Component  {
             youtube: this.state.youtube,
             instagram: this.state.instagram
           };
+        //  this.props.loginUser();
         this.props.createProfile(profileData, this.props.history);
 
     }
