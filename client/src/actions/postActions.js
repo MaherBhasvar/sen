@@ -42,6 +42,7 @@ export const getPosts = () => dispatch => {
 export const newSearch = (searchData, history) => dispatch => {
     dispatch(clearErrors());
     dispatch(setPostLoading());
+    console.log("post new search");
     axios.post('/api/search', searchData)
       .then(res => {
         dispatch({
@@ -52,37 +53,58 @@ export const newSearch = (searchData, history) => dispatch => {
         history.push(`/search/${searchData.search}`);
       }
       )
-      .catch(err =>
+      .catch(err =>{
         dispatch({
           type: GET_POSTS,
           payload: null
         })
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data,
+        })
+              
+      }
       );
   };
 
-export const getNewSearch = (search) => dispatch => {
+export const getNewSearch = (search, history) => dispatch => {
   dispatch(clearErrors());
   dispatch(setPostLoading());
+  console.log("get New Search");
   axios
     .get(`/api/search/${search}`)
     .then(res =>{
+      
       dispatch({
         type: GET_POSTS,
         payload: res.data
       })
+      console.log(search)
+      console.log("search done");
       console.log(res.data);
+//      history.push(`/search/${search}`)
     }
     )
-    .catch(err =>
+    .catch(err =>{
+      console.log(err);
       dispatch({
         type: GET_POSTS,
         payload: null
-      })
+      });
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      });
+      console.log("errors from get new search")
+      console.log(search)
+      console.log(err.response.data);    
+    }
     );
 }
   
 // Get Post
 export const getPost = id => dispatch => {
+
   dispatch(clearErrors());
     dispatch(setPostLoading());
     axios

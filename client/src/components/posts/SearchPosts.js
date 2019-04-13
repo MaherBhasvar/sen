@@ -9,8 +9,10 @@ import {newSearch, getNewSearch} from '../../actions/postActions';
 
 class SearchPosts extends Component {
   componentDidMount() {
-    console.log(this.props.match.params.id)
-    this.props.getNewSearch(this.props.match.params.id);
+    console.log(this.props.errors);
+    console.log(this.props.match.params.id);
+    console.log("sent from componenet did mount SearchPosts")
+    this.props.getNewSearch(this.props.match.params.id, this.props.history);
     // if (this.props.match.params.id) {
     //   console.log("didmount")
     //   const searchTerm = {
@@ -23,35 +25,52 @@ class SearchPosts extends Component {
   }
 
     state = {
-        errors: {}
+        search: this.props.match.params.id,
+        errors: {
+          search: '',
+        }
     }
 
     componentWillReceiveProps (nextProps) {
+      console.log(nextProps);
         if (nextProps.errors) {
+          console.log(nextProps.errors);
             this.setState({ errors: nextProps.errors });
           }
     }
 
   render() {
     const { posts, loading } = this.props.post;
-    const {errors} = this.props;
+    const {errors} = this.state;
     let postContent;
+    console.log(this.props.match.params.id)
 
-    if(errors.search) {
+    if(errors) {
+      console.log(errors);
+    }
+
+    if(errors.search || errors.nopostsfound) {
         console.log('Errors in search');
         console.log(errors.search);
-        postContent = (<h1>{errors.search}</h1>)
+        postContent = (<h1>{errors.search || errors.nopostsfound}</h1>);
     } else {
-        if (posts === null || loading) {
+        if(errors.search || errors.nopostsfound) {
+          postContent = (<h1>{errors.search || errors.nopostsfound}</h1>);
+
+        } else if (posts === null || loading) {
             postContent = <Spinner />;
           } else {
              postContent = <PostFeed posts={posts} />;
           }
     }
+    if (this.state.errors.search || this.state.errors.nopostsfound) {
+      postContent = (<h1>{this.state.errors.search || this.state.errors.nopostsfound}</h1>);
+    }
 
 
     return (
       <div className="feed">
+      
         <div className="container">
           <div className="row">
             <div className="col-md-12">

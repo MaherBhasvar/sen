@@ -13,12 +13,23 @@ class Posts extends Component {
 
   render() {
     const { posts, loading } = this.props.post;
+    const {errors} = this.props;
+
     let postContent;
 
-    if (posts === null || loading) {
+    if (errors.search || errors.nopostsfound) {
+      console.log("errors in post");
+      console.log(errors);
+      postContent = (<h1>{errors.search || errors.nopostsfound}</h1>);
+    } else if (posts === null || loading) {
       postContent = <Spinner />;
     } else {
-       postContent = <PostFeed posts={posts} />;
+       postContent =( 
+         <div>
+          <PostForm />
+          <PostFeed posts={posts} />
+        </div>
+        );
     }
 
     return (
@@ -26,7 +37,7 @@ class Posts extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-12">
-              <PostForm />
+              
               {postContent}
             </div>
           </div>
@@ -42,7 +53,8 @@ Posts.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  post: state.post
+  post: state.post,
+  errors: state.errors,
 });
 
 export default connect(mapStateToProps, {getPosts} )(Posts);

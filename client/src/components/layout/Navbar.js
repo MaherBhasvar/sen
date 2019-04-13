@@ -6,7 +6,7 @@ import {logoutUser} from '../../actions/authActions';
 import {clearCurrentProfile, getProfileByHandle} from '../../actions/profileActions';
 
 import TextFieldGroup from '../common/TextFieldGroup';
-import {newSearch} from '../../actions/postActions';
+import {getNewSearch} from '../../actions/postActions';
 
 import Dropdown from 'react-bootstrap/Dropdown';
 
@@ -36,7 +36,9 @@ class Navbar extends Component {
       ...this.state,
     };
 //    this.props.history.push(`/search/${searchTerm.search}`)
-    this.props.newSearch(searchTerm, this.props.history);
+  console.log("sent from onSubmit Navbar")
+    this.props.getNewSearch(this.state.search, this.props.history);
+    this.props.history.push(`/search/${this.state.search}`)
     //this.setState({ text: '', url:'' });
     //this.props.history.push(`/search/${this.state.search}`)
   }
@@ -61,7 +63,7 @@ class Navbar extends Component {
     render () {
       const { errors } = this.state;
       const {isAuthenticated, user} = this.props.auth;
-
+//      console.log(errors);
 //      const {profile} = this.props.profile;
       let dropdown;
 
@@ -178,7 +180,7 @@ class Navbar extends Component {
 
 Navbar.propTypes = {
   getProfileByHandle: PropTypes.func.isRequired,
-  newSearch: PropTypes.func.isRequired,
+  getNewSearch: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
 }
@@ -190,4 +192,4 @@ const mapStateToProps = state => ({
 //  profile: state.profile
 });
 
-export default connect(mapStateToProps, {logoutUser, clearCurrentProfile, newSearch, getProfileByHandle}) (withRouter(Navbar));
+export default connect(mapStateToProps, {logoutUser, clearCurrentProfile, getNewSearch, getProfileByHandle}) (withRouter(Navbar));

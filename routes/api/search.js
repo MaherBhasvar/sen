@@ -24,7 +24,8 @@ router.get('/test', (req, res) => res.json({msg: "Posts Works"}));
 //@description  Search all Posts
 //@access       Public
 router.get ('/', (req, res) => {
-    return res.json({search: "Empty Search"});
+
+    return res.status(400).json({search: "Empty Search"});
 
 })
 
@@ -33,8 +34,11 @@ router.get ('/', (req, res) => {
 //@description  Search according to search term
 //@access       Public
 router.get ('/:search', (req, res) => {
-    const {errors, isValid} = validateSearchInput({search: req.params.search});
-
+    const {errors, isValid} = validateSearchInput({search: req.params.search.toString()});
+    if (req.params.search === undefined) {
+      console.log("empty search returned")
+      return res.status(400).json({search: "Empty Search"});
+    }
     //check validation
     if(!isValid) {
         return res.status(400).json(errors);
