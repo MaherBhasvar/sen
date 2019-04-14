@@ -74,3 +74,4 @@ const port = process.env.PORT || 5000;
 //process.env.PORT for Heroku
 
 app.listen(port, () => console.log(`Server Running on Port ${port}`));
+module.exports.app = app;
