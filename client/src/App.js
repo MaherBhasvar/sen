@@ -8,7 +8,7 @@ import setAuthToken from './utils/setAuthToken';
 import {setCurrentUser, logoutUser} from './actions/authActions';
 import {clearCurrentProfile } from './actions/profileActions';
 
-
+import './bootstrap.min.css';
 import './App.css';
 
 import Navbar from './components/layout/Navbar';
