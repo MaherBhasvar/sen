@@ -24,7 +24,6 @@ router.get('/test', (req, res) => res.json({msg: "Posts Works"}));
 //@description  Search all Posts
 //@access       Public
 router.get ('/', (req, res) => {
-
     return res.status(400).json({search: "Empty Search"});
 
 })
@@ -44,9 +43,9 @@ router.get ('/:search', (req, res) => {
         return res.status(400).json(errors);
     }
 
-    console.log("get search ");
-    console.log(req.params);
-    console.log(req.params.search);
+    // console.log("get search ");
+    // console.log(req.params);
+    // console.log(req.params.search);
     text = req.params.search
     .replace(/\s+/g, " ")
     .replace(/[^a-zA-Z0-9 ]/g, " ")
@@ -61,7 +60,7 @@ router.get ('/:search', (req, res) => {
           Post.find({_id: element.postid}, function(err, data2){
             if (err) return console.error(err);
             data2.forEach(result => {
-              console.log(result.link);
+              // console.log(result.link);
               posts.push(result);
 
             });
@@ -103,7 +102,7 @@ router.get ('/:search', (req, res) => {
 //@access       Public
 router.post ('/', (req, res) => {
     const {errors, isValid} = validateSearchInput(req.body);
-
+    // console.log(res.body);
     //check validation
     if(!isValid) {
         return res.status(400).json(errors);
@@ -118,8 +117,8 @@ router.post ('/', (req, res) => {
     // .sort({date: -1})
     // .then(posts => res.json(posts))
     // .catch(err => res.status(404).json({nopostsfound: 'No posts found'}));
-    console.log(" post search")
-    console.log(req.body.search);
+    // console.log(" post search")
+    // console.log(req.body.search);
     text = req.body.search
     .replace(/\s+/g, " ")
     .replace(/[^a-zA-Z0-9 ]/g, " ")
@@ -135,7 +134,7 @@ router.post ('/', (req, res) => {
             if (err) return console.error(err);
             data2.forEach(result => {
               //error here result.link returning undefined 
-              console.log(result.link);
+              // console.log(result.link);
               posts.push(result);
 
             });
@@ -163,7 +162,7 @@ router.post ('/', (req, res) => {
         });
 
         // console.log(set);
-        console.log(result.length);
+        // console.log(result.length);
         if(result.length == 0)
             res.status(404).json({nopostsfound: 'No posts found'})
         else
