@@ -1,6 +1,24 @@
 import axios from 'axios';
 
-import {ADD_POST, GET_ERRORS, GET_POSTS,  POST_LOADING, DELETE_POST, GET_POST, CLEAR_ERRORS} from './types';
+import {SET_SORT_TYPE, ADD_POST, GET_ERRORS, GET_POSTS,  POST_LOADING, DELETE_POST, GET_POST, CLEAR_ERRORS, SEARCH_TERM} from './types';
+
+//setSortType
+export const setSortType = sortTypes => dispatch => {
+  console.log("set sort action")
+  console.log(sortTypes);
+  dispatch({
+    type: SET_SORT_TYPE,
+    payload: sortTypes,
+  });
+
+}
+
+export const addViewCount = (postId) => dispatch => {
+  axios.post(`/api/posts/views/${postId}`)
+    .then(res => console.log("view added"))
+    .catch(err => console.log("add view error", err));
+}
+
 
 //add post
 export const addPost = postData => dispatch => {
@@ -39,69 +57,7 @@ export const getPosts = () => dispatch => {
       );
   };
 
-export const newSearch = (searchData, history) => dispatch => {
-    dispatch(clearErrors());
-    dispatch(setPostLoading());
-    console.log("post new search");
-    axios.post('/api/search', searchData)
-      .then(res => {
-        dispatch({
-          type: GET_POSTS,
-          payload: res.data
-        })
-        console.log(res.data);
-        history.push(`/search/${searchData.search}`);
-      }
-      )
-      .catch(err =>{
-        dispatch({
-          type: GET_POSTS,
-          payload: null
-        })
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data,
-        })
-              
-      }
-      );
-  };
 
-export const getNewSearch = (search, history) => dispatch => {
-  dispatch(clearErrors());
-  dispatch(setPostLoading());
-  console.log("get New Search");
-  axios
-    .get(`/api/search/${search}`)
-    .then(res =>{
-      
-      dispatch({
-        type: GET_POSTS,
-        payload: res.data
-      })
-      console.log(search)
-      console.log("search done");
-      console.log(res.data);
-//      history.push(`/search/${search}`)
-    }
-    )
-    .catch(err =>{
-      console.log(err);
-      dispatch({
-        type: GET_POSTS,
-        payload: null
-      });
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data,
-      });
-      console.log("errors from get new search")
-      console.log(search)
-      console.log(err.response.data);    
-    }
-    );
-}
-  
 // Get Post
 export const getPost = id => dispatch => {
 
@@ -380,5 +336,94 @@ export const clearErrors = () => {
   };
 };
 
+/********************************************************* */
+/********************************************************* */
+/********************************************************* */
+//search actions
+/********************************************************* */
+/********************************************************* */
+/********************************************************* */
 
+// Post search term
+export const newSearch = (searchData, history) => dispatch => {
+  dispatch(clearErrors());
+  dispatch(setPostLoading(searchData));
+  console.log("post new search");
+  axios.post('/api/search', searchData)
+    .then(res => {
+      dispatch({
+        type: GET_POSTS,
+        payload: res.data
+      })
+      console.log(res.data);
+      history.push(`/search/${searchData.search}`);
+    }
+    )
+    .catch(err =>{
+      dispatch({
+        type: GET_POSTS,
+        payload: null
+      })
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data,
+      })
+            
+    }
+    );
+};
 
+//get new term
+export const getNewSearch = (search, history) => dispatch => {
+dispatch(clearErrors());
+//dispatch(setSearchTerm(search));
+console.log("get New Search");
+axios
+  .get(`/api/search/${search}`)
+  .then(res =>{
+    dispatch(setSearchTerm(search));
+    dispatch({
+      type: GET_POSTS,
+      payload: res.data
+    })
+    console.log(search)
+    console.log("search done");
+    console.log(res.data);
+//      history.push(`/search/${search}`)
+  }
+  )
+  .catch(err =>{
+    console.log(err);
+    dispatch({
+      type: GET_POSTS,
+      payload: null
+    });
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data,
+    });
+    console.log("errors from get new search")
+    console.log(search)
+    console.log(err.response.data);    
+  }
+  );
+}
+
+//set global search term
+export const setSearchTerm = (searchData) => dispatch => {
+//dispatch(clearErrors());
+console.log("in the set search action", searchData)
+  dispatch ({
+    type: SEARCH_TERM,
+    payload: searchData
+  });
+};
+
+export const clearSearchTerm = () => dispatch => {
+  //dispatch(clearErrors());
+  console.log("in the clear search action", )
+    dispatch ({
+      type: SEARCH_TERM,
+      payload: '',
+    });
+  };

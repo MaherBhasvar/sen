@@ -16,6 +16,7 @@ const path = require("path");
 const Post = require('../../models/Post');
 const Profile = require('../../models/Profile');
 const Tag = require('../../models/Tag');
+const User = require('../../models/User')
 //const Tag = require('../../models/Tag');
 
 //const Tag = mongoose.model('Tag');
@@ -64,9 +65,158 @@ router.get ('/:id', (req, res) => {
 //@route        POST api/posts
 //@description  Create Posts
 //@access       Private
-//passport.authenticate('jwt', {session: false,}),
-router.post('/',  (req, res) => {
+// router.post('/', passport.authenticate('jwt', {session: false,}), (req, res) => {
+
+//     const {errors, isValid} = validatePostInput(req.body);
+
+//     if(!isValid) {
+//         //if any errors, send 400 with the error
+//         return res.status(400).json(errors);
+//     }
+
+//     const url = req.body.url;
+//      request(url, (error, resp, body) => {
+//         if (error) {
+//            console.log(error);
+//         }
+        
+//         let $ =  cheerio.load(body);
+//         let rawdata = fs.readFileSync(path.resolve(__dirname, "../IDF_score.json"));
+//         let dict = JSON.parse(rawdata);
+//         var tf = computeTF(req.body.text + req.body.text + $.text());
+//         var headlinetext = url.toString()
+//                                 .replace('html', '')
+//                                 .split('/');
+                                
+
+//         headlinetext = headlinetext.reduce(function (a, b) { return a.length > b.length ? a : b; });
+//         headlinetext = headlinetext
+//             .substring(headlinetext.lastIndexOf('/'), headlinetext.length)
+//             .replace(/\s+/g, " ")
+//             .replace(/[^a-zA-Z0-9 ]/g, " ");
+
+//         // arrays of arrays format
+//         tfidf_score = computeTFIDF(tf, dict);     // tfidf score in [tag, score] format
+//         // console.log(tfidf_score.slice(0, 10));
+//         // console.log('Tags above');
+//         if(headlinetext == null || headlinetext.length<20)
+//             headlinetext = url;
+//         const newPost = new Post({
+//             text: req.body.text,
+//             url: req.body.url,
+//             name: req.body.name,
+//             headline: headlinetext,
+//             avatar: req.body.avatar,
+//             user: req.user.id,
+//             handle: req.user.handle,
+//         //    views: 0,
+//             tags :  tfidf_score.slice(0, 10)
+//         });
+
+//         //console.log(newPost.tags);
+
+//         //keeps log of profiles to whom notifications are sent
+//         var uid = [];
+
+//         // Separate storage for tags with scores
+//         var pid = newPost.get( "_id" );
+//          tfidf_score.slice(0, 10).forEach(element => {
+//             var tag1 = new Tag({
+//                 tag: element[0],
+//                 postid: pid,
+//                 score: element[1] 
+//             });
+//             tag1.save().then((doc) => {
+//                 // res.send(doc);
+//                 console.log(tag1.tag+'added');
+//                 }).catch((e) => {
+//                     //res.status(400).json(err)
+//                     console.log(e);
+//                     //res.status(400).send(e);
+//                 });
+
+//             // Profile.find({
+//             //     interests: tag1.tag,
+//             // }).then(profiles => {
+//             //     //console.log("profiles that are interested", profiles);
+//             //     profiles.map(profile => {
+//             //         //only send notifications to the users once
+//             //         if (!uid.includes(profile._id)) {
+//             //             uid.push(profile._id);
+//             //             console.log(profile._id);
+//             //             //dispatch user update for notifications
+//             //              User.find({handle : profile.handle})
+//             //                 .then(user => {
+//             //                     // if (user.handle === req.user.handle) {
+//             //                     //     return console.log("not for current user");
+//             //                     // }
+//             //                     // if(user.notification.length === 0) {
+//             //                     //     const newUser = new User ({
+//             //                     //         ...user,
+//             //                     //         notification: [].unshift(newPost.get( "_id" )),
+//             //                     //         //notification: user.notification.unshift(newPost.get( "_id" ))
+//             //                     //     });
+//             //                     //     newUser.save().then(doc => console.log("saved notifications")).catch(err => res.status(400).json(err));
+//             //                     // } else {
+//             //                     //     const newUser = new User ({
+//             //                     //         ...user,
+//             //                     //         notification: user.notification.unshift(newPost.get( "_id" ))
+//             //                     //     });
+//             //                     //     newUser.save().then(doc => console.log("saved notifications")).catch(err => res.status(400).json(err));
+//             //                     // }
+//             //                     console.log(newPost);
+//             //                     console.log(user);
+//             //                     console.log(typeof user.notification);
+//             //                     console.log(newPost.get( "_id" ));
+
+//             //                     //if (profile.handle !== req.user.handle){
+//             //                         // user.notification.push(
+//             //                         //     newPost.get( "_id" )
+//             //                         //     // headline: newPost.headline,
+//             //                         //     // url: newPost.url,
+//             //                         // )}
+//             //                        // user.save().then(doc => console.log("saved notifications")).catch(err => res.status(400).json(err));
+                                
+//             //                 }
+//             //                 )
+//             //                 .catch(err => {
+//             //                     //res.status(400).json(err)
+//             //                     console.log("err from user find", err)
+//             //                 });
+//             //         }
+                    
+//             //     });
+
+//             }).catch(err => {
+//                 console.log("err from user find", err)
+//             });
+
+//        // console.log("the profiles are",uid);
+
+//         //newPost.save().then(post => res.json(post));
+//         // const newTag = { tag: element[0],
+//         //     postid: pid,
+//         //     score: element[1] }
+//         //  
+//         //newPost.save().then(post => res.json(post));
+        
+        
+//         newPost.save().then((post) => {
+//             res.json(post);
+//           }).catch((e) => {
+//               console.log(e);
+//             res.status(400).send(e);
+//         });
+
     
+           
+//     }); 
+
+// });
+// });
+
+router.post('/', passport.authenticate('jwt', {session: false,}), (req, res) => {
+
     const {errors, isValid} = validatePostInput(req.body);
 
     if(!isValid) {
@@ -97,6 +247,9 @@ router.post('/',  (req, res) => {
         // arrays of arrays format
         tfidf_score = computeTFIDF(tf, dict);     // tfidf score in [tag, score] format
         // console.log('Tags above');
+
+        var uid = [];
+
         if(headlinetext == null || headlinetext.length<20)
             headlinetext = url;
         const newPost = new Post({
@@ -107,6 +260,7 @@ router.post('/',  (req, res) => {
             avatar: req.body.avatar,
             user: req.user.id,
             handle: req.user.handle,
+        //    views: 0,
             tags :  tfidf_score.slice(0, 10)
         });
         
@@ -125,15 +279,69 @@ router.post('/',  (req, res) => {
                 }, (e) => {
                     res.status(400).send(e);
                 });
+
+            Profile.find({
+                interests: tag1.tag,
+            }).then(profiles => {
+                //console.log("profiles that are interested", profiles);
+                profiles.map(profile => {
+                    //only send notifications to the users once
+                    if (!uid.includes(profile._id)) {
+                        uid.push(profile._id);
+
+                        console.log(profile._id);
+                        //dispatch user update for notifications
+                            User.find({handle : profile.handle})
+                            .then(user => {
+                                console.log(profile);
+                                console.log(newPost);
+                                console.log(user);
+                                console.log(typeof user.notification);
+                                console.log(newPost.get( "_id" ));
+
+                                //const note = [];
+
+                                // user.notification.map(notify => {
+                                //     note.push(notify);
+                                // });
+
+                                // note.push(newPost.get( "_id" ));
+
+                                // const newUser = new User ({
+                                //     ...user,
+                                //     notification: note,
+                                // });
+
+                                // newUser.save().then(user => console.log("success")).catch(err => console.log("failure", err))
+
+                                // if (profile.handle !== req.user.handle){
+                                //     user.notification.push(
+                                //         newPost.get( "_id" )
+                                //         // headline: newPost.headline,
+                                //         // url: newPost.url,
+                                //     )
+                                //     user.save().then(doc => console.log("saved notifications")).catch(err => res.status(400).json(err));
+                                // }
+                                // if (profile.handle !== req.user.handle){
+                                //     user.notify.unshift({
+                                //         post: newPost.get( "_id" )
+                                //     })
+                                //     user.save().then(doc => console.log("saved notifications")).catch(err => res.status(400).json(err));
+                                // }                                
+                            }
+                            )
+                            .catch(err => {
+                                //res.status(400).json(err)
+                                console.log("err from user find", err)
+                            });
+                    }
+                    
+                });
+
+            }).catch(err => {
+                console.log("err from user find", err)
+            });
         });
-
-
-        //newPost.save().then(post => res.json(post));
-        // const newTag = { tag: element[0],
-        //     postid: pid,
-        //     score: element[1] }
-        //  
-        //newPost.save().then(post => res.json(post));
         
         
         newPost.save().then((doc) => {
@@ -150,6 +358,8 @@ router.post('/',  (req, res) => {
 
 
 
+
+
 //@route        Delete api/posts/:id
 //@description  Delete Posts
 //@access       Private
@@ -159,7 +369,7 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
             Post.findById(req.params.id)
                 .then(post => {
                     //check for the owner
-                    if(post.user.toString() !== req.user.id) {
+                    if((post.user.toString() !== req.user.id) || (req.user.isAdmin === true)) {
                         return res.status(401).json({notauthorised: 'User not authorised'});
                     }
 
@@ -169,6 +379,24 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
                 .catch(err => res.status(404).json({postnotfound: 'No post found'}));
         }).catch(err => {console.log("Error"); res.status(400).json(err)});
 });
+
+//@route        Post api/posts/views/:id
+//@description  View Post
+//@access       Public
+router.post('/views/:id', (req, res) => {
+
+            Post.findById(req.params.id)
+                .then(post => {
+                    post.views += 1;
+                    //save
+                    console.log("post views", post.views);
+                    post.save().then(() => res.json({success: true}));
+                })
+            .catch(err => {console.log("error in views"); res.status(404).json({postnotfound: 'No post found'})});
+
+});
+
+
 
 
 //@route        POST api/posts/like/:id

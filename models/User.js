@@ -31,33 +31,17 @@ const UserSchema = new Schema ({
         type: Boolean,
         default: false,
     },
-    notification: [
+    notification: {
+        type: [String]
+        
+    },
+    notify: [
         {
-            user: {
+            post: {
                 type: Schema.Types.ObjectId,
-                ref: 'users',
-            },
-            text: {
-                type: String,
-                required: true,
-            },
-            headline: {
-
-            },
-            url: {
-
-            },
-            name: {
-                type: String,
-            },
-            avatar: {
-                type: String
-            },
-            date: {
-                type: Date,
-                default: Date.now,
-            },
-        },
+                ref: 'post'
+            }
+        }
     ],
 });
 

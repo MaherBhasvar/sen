@@ -37,7 +37,7 @@ router.get ('/:search', (req, res) => {
     const {errors, isValid} = validateSearchInput({search: req.params.search.toString()});
     if (req.params.search === undefined) {
       console.log("empty search returned")
-      return res.status(400).json({search: "Empty Search"});
+      return res.status(400).json({search: "Empty Search from id"});
     }
     //check validation
     if(!isValid) {

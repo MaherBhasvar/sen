@@ -18,7 +18,6 @@ const PostSchema = new Schema ({
     headline:{
         type: String,
     },
-    
     text: {
         type: String,
         required: true, 
@@ -28,6 +27,10 @@ const PostSchema = new Schema ({
     },
     avatar: {
         type: String
+    },
+    views: {
+        type: Number,
+        default: 0,
     },
     likes: [
         {

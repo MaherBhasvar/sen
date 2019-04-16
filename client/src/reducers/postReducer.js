@@ -1,14 +1,24 @@
-import {ADD_POST, GET_POSTS, POST_LOADING, GET_POST, DELETE_POST} from '../actions/types';
+import {SET_SORT_TYPE ,ADD_POST, GET_POSTS, POST_LOADING, GET_POST, DELETE_POST} from '../actions/types';
 
 const initialState = {
     posts: [],
     post: {},
+    sortTypes: {
+        sortType1 :'Date',
+        sortType2 : 'Descending',
+    },
     loading: false,
 };
 
 export default function (state = initialState, action) {
     switch (action.type) {
-        case POST_LOADING:
+    case SET_SORT_TYPE:
+{      console.log("from post reducer", action.payload);
+      return {
+        ...state,
+        sortTypes: action.payload,
+      };}
+      case POST_LOADING:
         return {
           ...state,
           loading: true
@@ -36,6 +46,7 @@ export default function (state = initialState, action) {
           posts: state.posts.filter(post => post._id !== action.payload)
         };
         default:
+        console.log("default reducer")
             return state;
     }
 }

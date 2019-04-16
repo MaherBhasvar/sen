@@ -6,7 +6,7 @@ import {logoutUser} from '../../actions/authActions';
 import {clearCurrentProfile, getProfileByHandle} from '../../actions/profileActions';
 
 import TextFieldGroup from '../common/TextFieldGroup';
-import {getNewSearch} from '../../actions/postActions';
+import {getNewSearch, clearSearchTerm} from '../../actions/postActions';
 
 import Dropdown from 'react-bootstrap/Dropdown';
 
@@ -53,6 +53,10 @@ class Navbar extends Component {
     this.props.history.push(`/profile/${this.props.auth.user.handle}`);
   } 
 
+  onEmptyState () {
+    this.setState({search: ''})
+  }
+
 
   onLogoutClick(e) {
     e.preventDefault();
@@ -67,25 +71,28 @@ class Navbar extends Component {
 //      const {profile} = this.props.profile;
       let dropdown;
 
-      // if (user.notification !== null) {
-      //   dropdown = (
-      //     <Dropdown>
-      //     <Dropdown.Toggle variant="outline-primary" id="dropdown-basic" > 
-      //       Notification
-      //     </Dropdown.Toggle>
 
-      //     <Dropdown.Menu>
-      //       {user.notification === null ? (
-      //         <Dropdown.Item href="">No Notifications</Dropdown.Item>
-      //       ) : (
-      //         <div>
-      //           {user.notification.map(note => <Dropdown.Item href="#/action-1" key="note">{note}</Dropdown.Item>)}
-      //         </div>
-      //       )}
-      //     </Dropdown.Menu>
-      //   </Dropdown>
-      //   );
-      // }
+      if(isAuthenticated){
+      if (user.notification !== null) {
+        dropdown = (
+          <Dropdown>
+          <Dropdown.Toggle variant="outline-primary" id="dropdown-basic" > 
+            Notification
+          </Dropdown.Toggle>
+
+          <Dropdown.Menu>
+            {user.notification.length === 0 ? (
+              <Dropdown.Item href="">No Notifications</Dropdown.Item>
+            ) : (
+              <div>
+                {user.notification.map(note => <Dropdown.Item href="#/action-1" key="note">{note}</Dropdown.Item>)}
+              </div>
+            )}
+          </Dropdown.Menu>
+        </Dropdown>
+        );
+      }
+    }
 
       const searchBar =  (      
       <li className="nav-item">
@@ -151,9 +158,9 @@ class Navbar extends Component {
         return (
             <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
             <div className="container nav-item navbar-nav mr-auto ">
-              <Link className="navbar-brand" to="/landing">NewsLetter</Link>
-              <Link className="nav-link" to="/profiles"> People</Link>
-              <Link className="nav-link" to="/feed">Feed</Link>
+              <Link className="navbar-brand" to="/landing" onClick={(e) => {this.props.clearSearchTerm(); this.onEmptyState()}}>NewsLetter</Link>
+              <Link className="nav-link" to="/profiles" onClick={(e) => {this.props.clearSearchTerm()}}> People</Link>
+              <Link className="nav-link" to="/feed" onClick={(e) => {this.props.clearSearchTerm(); this.onEmptyState()}}>Feed</Link>
               {searchBar} 
               <div className="collapse navbar-collapse" id="mobile-nav">
                 {/* <ul className="navbar-nav mr-auto">
@@ -179,6 +186,7 @@ class Navbar extends Component {
 }
 
 Navbar.propTypes = {
+  clearSearchTerm: PropTypes.func.isRequired,
   getProfileByHandle: PropTypes.func.isRequired,
   getNewSearch: PropTypes.func.isRequired,
   logoutUser: PropTypes.func.isRequired,
@@ -192,4 +200,4 @@ const mapStateToProps = state => ({
 //  profile: state.profile
 });
 
-export default connect(mapStateToProps, {logoutUser, clearCurrentProfile, getNewSearch, getProfileByHandle}) (withRouter(Navbar));
+export default connect(mapStateToProps, {clearSearchTerm, logoutUser, clearCurrentProfile, getNewSearch, getProfileByHandle}) (withRouter(Navbar));

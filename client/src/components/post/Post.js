@@ -37,9 +37,15 @@ class Post extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-12">
-              <Link to="/feed" className="btn btn-light mb-3">
-                Back To Feed
-              </Link>
+              {
+                this.props.search.searchData === '' ?
+                  (<Link to='/feed' className="btn btn-light mb-3">
+                  Back To Feed
+                  </Link>) :
+                  (<Link to={`/search/${this.props.search.searchData}`} className="btn btn-light mb-3">
+                  Back To Search
+                  </Link>)
+              }
               {postContent}
             </div>
           </div>
@@ -55,7 +61,8 @@ Post.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  post: state.post
+  post: state.post,
+  search: state.search
 });
 
 export default connect(mapStateToProps, { getPost })(Post);

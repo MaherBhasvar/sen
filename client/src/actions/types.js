@@ -17,3 +17,5 @@ export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const SEARCH_RESULT = 'SEARCH_RESULT';
 export const SEARCH_LOADING = 'SEARCH_LOADING';
 export const SEARCH_TERM = 'SEARCH_TERM';
+
+export const SET_SORT_TYPE = 'SET_SORT_TYPE';

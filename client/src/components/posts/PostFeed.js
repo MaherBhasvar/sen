@@ -4,23 +4,74 @@ import PostItem from './PostItem';
 import Dropdown from 'react-bootstrap/Dropdown';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 
+import {connect} from 'react-redux'
+import {setSortType} from '../../actions/postActions';
+
 class PostFeed extends Component {
   state = {
-    sortType1: 'Date',
-    sortType2: 'Descending'
+    sortType1: '',
+    sortType2: ''
   }
-  onClickSortType1 (value) {
+
+    // componentWillReceiveProps (nextProps) {
+    //   this.setState({
+    //     sortType1: nextProps.post.sortType1,
+    //     sortType2: nextProps.post.sortType2,
+    //   });
+    // }
+    // componentDidMount () {
+    //   console.log("component did mount", this.state);
+    //   const sort = {...this.state};
+    //   if (this.state.sortType1 === '') {
+    //     sort.sortType1 = 'Date';
+    //     sort.sortType2 = 'Descending';
+    //   }
+    //   this.props.setSortType(sort)
+    // }
+
+    // componentWillReceiveProps (nextProps) {
+    //   console.log("component will receive", nextProps)
+    //   this.setState ({
+    //     sortType1: nextProps.post.sortType1,
+    //     sortType2: nextProps.post.sortType2,
+    //   })
+    // }
+
+    componentWillMount () {
+      console.log("will mount")
+      if (this.state.sortType1 === '') {
+        console.log("change in will mount")
+        this.setState ({
+          sortType1: this.props.post.sortTypes.sortType1,
+          sortType2: this.props.post.sortTypes.sortType2,
+        });
+      } else {
+        console.log("change in will mount")
+        this.setState({
+          sortType1: this.props.post.sortTypes.sortType1,
+          sortType2: this.props.post.sortTypes.sortType2,
+        })
+      }      
+    }
+
+  async onClickSortType1 (value) {
     console.log(value);
-    this.setState({sortType1: value});
+    await this.setState(prevState => {return {...prevState, sortType1: value}});
+    const sort = {...this.state};
+    this.props.setSortType(sort);
+    console.log(value);
   }
   onClickSortType2 (value) {
     console.log(value);
     this.setState({sortType2: value});
+    const sort = {...this.state};
+    this.props.setSortType(sort);
   }
   render() {
     const { posts } = this.props;
 
-
+    console.log(this.state);
+    console.log(this.props.post);
     // return posts.sort((a,b) => {
     //   console.log(a.date < b.date);
     //   return -1
@@ -111,7 +162,12 @@ class PostFeed extends Component {
 }
 
 PostFeed.propTypes = {
+  setSortType: PropTypes.func.isRequired,
   posts: PropTypes.array.isRequired
 };
 
-export default PostFeed;
+const mapStateToProps = state => ({
+  post : state.post,
+});
+
+export default connect(mapStateToProps, {setSortType})(PostFeed);

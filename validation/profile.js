@@ -6,6 +6,7 @@ module.exports = function validateLoginInput(data) {
  
 
     data.handle = !isEmpty(data.handle) ? data.handle: '';
+    data.age = !isEmpty(data.age) ? data.age: '';
     data.interests = !isEmpty(data.interests) ? data.interests: '';
 
     if(!Validator.isLength(data.handle, {min:2, max:40})) {
@@ -14,6 +15,10 @@ module.exports = function validateLoginInput(data) {
 
     if(Validator.isEmpty(data.handle)) {
         errors.handle = 'Profile handle is Required';
+    }
+
+    if(Validator.isEmpty(data.age)) {
+        errors.age = 'Profile age is Required';
     }
 
     if(Validator.isEmpty(data.interests)) {

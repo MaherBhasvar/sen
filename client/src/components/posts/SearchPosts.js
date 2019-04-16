@@ -5,7 +5,7 @@ import {withRouter} from 'react-router-dom';
 
 import PostFeed from './PostFeed';
 import Spinner from '../common/Spinner';
-import {newSearch, getNewSearch} from '../../actions/postActions';
+import {newSearch, getNewSearch, setSearchTerm} from '../../actions/postActions';
 
 class SearchPosts extends Component {
   componentDidMount() {
@@ -13,6 +13,7 @@ class SearchPosts extends Component {
     console.log(this.props.match.params.id);
     console.log("sent from componenet did mount SearchPosts")
     this.props.getNewSearch(this.props.match.params.id, this.props.history);
+    //this.props.setSearchTerm(this.props.match.params.id);
     // if (this.props.match.params.id) {
     //   console.log("didmount")
     //   const searchTerm = {
@@ -84,6 +85,7 @@ class SearchPosts extends Component {
 }
 
 SearchPosts.propTypes = {
+  setSearchTerm: PropTypes.func.isRequired,
   getNewSearch: PropTypes.func.isRequired,
   newSearch: PropTypes.func.isRequired,
   search: PropTypes.object.isRequired
@@ -95,4 +97,4 @@ const mapStateToProps = state => ({
   post: state.post,
 });
 
-export default connect(mapStateToProps, {newSearch, getNewSearch} )(withRouter(SearchPosts));
+export default connect(mapStateToProps, {setSearchTerm,newSearch, getNewSearch} )(withRouter(SearchPosts));

@@ -4,7 +4,7 @@ const initialState = {
     posts: [],
     post: {},
     loading: false,
-    searchData: {},
+    searchData: '',
 };
 
 export default function (state = initialState, action ) {
