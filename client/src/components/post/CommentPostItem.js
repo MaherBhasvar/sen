@@ -3,17 +3,33 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
-import { deletePostFromView, addLikeFromView, removeLikeFromView, removeDislikeFromView, addDislikeFromView, addReportFromView, removeReportFromView} from '../../actions/postActions';
+import {addViewCount, deletePostFromView, addLikeFromView, removeLikeFromView, removeDislikeFromView, addDislikeFromView, addReportFromView, removeReportFromView} from '../../actions/postActions';
  
 import {withRouter} from 'react-router-dom'
 
 class CommentPostItem extends Component {
+
+  countView (post) {
+    //add view count
+    //this.props.addViewCount(post._id);
+  }
+
+  componentDidMount () {
+    //this.props.addViewCount(this.props.post._id);
+  }
+
   onDeleteClick(id) {
+    if(!this.props.auth.isAuthenticated) {
+      this.props.history.push('/landing');
+    }
     this.props.deletePostFromView(id);
     this.props.history.push('/feed');
   }
 
   onLikeClick(post) {
+    if(!this.props.auth.isAuthenticated) {
+      this.props.history.push('/landing');
+    }
     if(this.findUserLike(post.likes)) {
       this.props.removeLikeFromView(post._id);
     } else {
@@ -22,6 +38,9 @@ class CommentPostItem extends Component {
   }
 
   onDislikeClick(post) {
+    if(!this.props.auth.isAuthenticated) {
+      this.props.history.push('/landing');
+    }
     if(this.findUserDislike(post.dislikes)) {
       this.props.removeDislikeFromView(post._id);
     } else {
@@ -30,6 +49,9 @@ class CommentPostItem extends Component {
   }
 
   onReportClick(post) {
+    if(!this.props.auth.isAuthenticated) {
+      this.props.history.push('/landing');
+    }
     if(this.findUserReport(post.reports)) {
       this.props.removeReportFromView(post._id);
     } else {
@@ -64,6 +86,8 @@ class CommentPostItem extends Component {
 
   render() {
     const { post, auth, showActions } = this.props;
+
+//    this.countView(post);
 
     return (
       <div className="card card-body mb-3">
@@ -126,7 +150,7 @@ class CommentPostItem extends Component {
                     </button>
                   
                 ) : null}
-
+                <i className="fas fa-eye"></i><span className="badge badge-light">{post.views}</span>
                     <a href="#text-area" className="btn btn-info mr-1"> Make a Comment <span className="badge badge-light">{post.comments.length}</span></a>
 
                 {post.user === auth.user.id || auth.user.isAdmin ? (
@@ -153,6 +177,8 @@ CommentPostItem.defaultProps = {
 
 CommentPostItem.propTypes = {
 
+  addViewCount: PropTypes.func.isRequired,
+
   deletePostFromView: PropTypes.func.isRequired,
   addLikeFromView: PropTypes.func.isRequired,
 
@@ -173,6 +199,6 @@ const mapStateToProps = state => ({
   profile: state.profile,
 });
 
-export default connect(mapStateToProps, { deletePostFromView, addLikeFromView, removeLikeFromView, removeDislikeFromView, addDislikeFromView, removeReportFromView, addReportFromView})(
+export default connect(mapStateToProps, {addViewCount, deletePostFromView, addLikeFromView, removeLikeFromView, removeDislikeFromView, addDislikeFromView, removeReportFromView, addReportFromView})(
   withRouter(CommentPostItem)
 );

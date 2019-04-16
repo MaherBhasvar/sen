@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import TextAreaFieldGroup from '../common/TextAreaFieldGroup';
 import { addComment } from '../../actions/postActions';
 
+import {withRouter} from 'react-router-dom';
+
 class CommentForm extends Component {
   constructor(props) {
     super(props);
@@ -23,6 +25,9 @@ class CommentForm extends Component {
   }
 
   onSubmit(e) {
+    if(!this.props.auth.isAuthenticated) {
+      this.props.history.push('/landing');
+    }
     e.preventDefault();
 
     const { user } = this.props.auth;
@@ -39,6 +44,9 @@ class CommentForm extends Component {
   }
 
   onChange(e) {
+    if(!this.props.auth.isAuthenticated) {
+      this.props.history.push('/landing');
+    }
     this.setState({ [e.target.name]: e.target.value });
   }
 
@@ -85,4 +93,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { addComment })(CommentForm);
+export default connect(mapStateToProps, { addComment })(withRouter(CommentForm));

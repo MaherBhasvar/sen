@@ -108,6 +108,7 @@ router.post('/', passport.authenticate('jwt', {session: false,}), (req, res) => 
             avatar: req.body.avatar,
             user: req.user.id,
             handle: req.user.handle,
+        //    views: 0,
             tags :  tfidf_score.slice(0, 10)
         });
         
@@ -170,6 +171,24 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
                 .catch(err => res.status(404).json({postnotfound: 'No post found'}));
         }).catch(err => {console.log("Error"); res.status(400).json(err)});
 });
+
+//@route        Post api/posts/views/:id
+//@description  View Post
+//@access       Public
+router.post('/views/:id', (req, res) => {
+
+            Post.findById(req.params.id)
+                .then(post => {
+                    post.views += 1;
+                    //save
+                    console.log("post views", post.views);
+                    post.save().then(() => res.json({success: true}));
+                })
+            .catch(err => {console.log("error in views"); res.status(404).json({postnotfound: 'No post found'})});
+
+});
+
+
 
 
 //@route        POST api/posts/like/:id
