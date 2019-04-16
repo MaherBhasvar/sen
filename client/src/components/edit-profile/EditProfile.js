@@ -16,6 +16,7 @@ class EditProfile extends Component  {
     state = {
         displaySocialInputs: false,
         handle: '',
+        age: '',
         // company: '',
         // website: '',
         location: '',
@@ -70,6 +71,7 @@ class EditProfile extends Component  {
             // Set component fields state
             this.setState({
                 handle: profile.handle,
+                age: profile.age,
                 // company: profile.company,
                 // website: profile.website,
                 location: profile.location,
@@ -91,6 +93,7 @@ class EditProfile extends Component  {
 
         const profileData = {
             handle: this.state.handle,
+            age: this.state.age,
             // company: this.state.company,
             // website: this.state.website,
             location: this.state.location,
@@ -204,6 +207,15 @@ class EditProfile extends Component  {
                     onChange={e => this.onChange(e)}
                     error={errors.handle}
                     info="A unique handle for your profile URL. Your full name, company name, nickname"
+                    />
+                    <TextFieldGroup
+                    placeholder="* Date of Birth"
+                    name="age"
+                    type="date"
+                    value={this.state.age}
+                    onChange={e => this.onChange(e)}
+                    error={errors.age}
+                    info=""
                     />
                     {/* <SelectListGroup
                     placeholder="Status"

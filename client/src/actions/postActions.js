@@ -376,12 +376,12 @@ export const newSearch = (searchData, history) => dispatch => {
 //get new term
 export const getNewSearch = (search, history) => dispatch => {
 dispatch(clearErrors());
-dispatch(setSearchTerm(search));
+//dispatch(setSearchTerm(search));
 console.log("get New Search");
 axios
   .get(`/api/search/${search}`)
   .then(res =>{
-    dispatch(setSearchTerm());
+    dispatch(setSearchTerm(search));
     dispatch({
       type: GET_POSTS,
       payload: res.data
@@ -411,9 +411,19 @@ axios
 
 //set global search term
 export const setSearchTerm = (searchData) => dispatch => {
-dispatch(clearErrors());
-  return {
+//dispatch(clearErrors());
+console.log("in the set search action", searchData)
+  dispatch ({
     type: SEARCH_TERM,
     payload: searchData
-  };
+  });
 };
+
+export const clearSearchTerm = () => dispatch => {
+  //dispatch(clearErrors());
+  console.log("in the clear search action", )
+    dispatch ({
+      type: SEARCH_TERM,
+      payload: '',
+    });
+  };

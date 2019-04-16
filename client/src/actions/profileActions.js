@@ -71,9 +71,11 @@ export const getProfiles = () => dispatch => {
 //Create Profile
 export const createProfile = (profileData, oldHandle, history) => dispatch =>  {
   dispatch(clearErrors());
+  console.log("from profile action ", profileData);
     axios
         .post('/api/profile', profileData)
         .then(res => {
+          
           if (profileData.handle === oldHandle){
             history.push(`/profile/${profileData.handle}`)
           }

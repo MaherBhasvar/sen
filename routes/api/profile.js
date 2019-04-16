@@ -113,7 +113,7 @@ router.get('/all', (req,res) => {
 router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
     const {errors, isValid} = validateProfileInput(req.body);
-
+    console.log("Age ",req.body.age);
     //check validation
     if(!isValid) {
         return res.status(400).json(errors);
@@ -124,6 +124,9 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
     profileFields.user = req.user.id;
 
     if(req.body.handle) profileFields.handle = req.body.handle;
+    if(req.body.age) profileFields.age = new Date(req.body.age);
+    console.log(req.body);
+    console.log("Age ",req.body.age);
     // if(req.body.company) profileFields.company = req.body.company;
     // if(req.body.website) profileFields.website = req.body.website;
     if(req.body.location) profileFields.location = req.body.location;
@@ -159,11 +162,12 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
                 // })
                 //update
                 //console.log(profile)
+                console.log("updating")
                 User.findOneAndUpdate ({_id: profileFields.user}, {$set: {handle: req.body.handle}})
-                    .then(user => {console.log(user); console.log("user handle updated")})
+                    .then(user => {console.log("about user-1",user); console.log("user handle updated")})
                     .catch(err => {console.log("Error"); res.status(400).json(err)});;
                 Profile.findOneAndUpdate ({user: req.user.id}, {$set: profileFields}, {new: true})
-                    .then(profile => {console.log(profile); res.json(profile)})
+                    .then(profile => {console.log("about profile-1",profile); res.json(profile)})
                     .catch(err => {console.log("Error"); res.status(400).json(err)});
                     
                 
@@ -178,7 +182,7 @@ router.post('/', passport.authenticate('jwt', {session: false}), (req, res) => {
 
                     //save profile
                     new Profile(profileFields).save().then(profile => res.json(profile));
-                });
+                }).catch(err => {console.log("ERROR", err); res.status(404).json(err)});
             }
         }).catch(err => {console.log("Error"); res.status(400).json(err)});;
 });

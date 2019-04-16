@@ -15,6 +15,7 @@ class CreateProfile extends Component  {
     state = {
         displaySocialInputs: false,
         handle: '',
+        age: '',
         // company: '',
         // website: '',
         location: '',
@@ -41,9 +42,10 @@ class CreateProfile extends Component  {
 
     onSubmit(e) {
         e.preventDefault();
-
+        console.log("age ",this.state.age)
         const profileData = {
             handle: this.state.handle,
+            age: this.state.age,
             // company: this.state.company,
             // website: this.state.website,
             location: this.state.location,
@@ -58,7 +60,7 @@ class CreateProfile extends Component  {
             instagram: this.state.instagram
           };
         //  this.props.loginUser();
-        this.props.createProfile(profileData, this.props.history);
+        this.props.createProfile(profileData, this.props.auth.user.handle, this.props.history);
 
     }
 
@@ -151,6 +153,15 @@ class CreateProfile extends Component  {
                     onChange={e => this.onChange(e)}
                     error={errors.handle}
                     info="A unique handle for your profile URL. Your full name, company name, nickname"
+                    />
+                    <TextFieldGroup
+                    placeholder="* Date of Birth"
+                    name="age"
+                    type="date"
+                    value={this.state.age}
+                    onChange={e => this.onChange(e)}
+                    error={errors.age}
+                    info="date of birth"
                     />
                     {/* <SelectListGroup
                     placeholder="Status"
