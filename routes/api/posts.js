@@ -64,19 +64,10 @@ router.get ('/:id', (req, res) => {
 //@route        POST api/posts
 //@description  Create Posts
 //@access       Private
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-//passport.authenticate('jwt', {session: false,}),
-router.post('/',  (req, res) => {
-    
-=======
-=======
->>>>>>> Stashed changes
 router.post('/'
 // , passport.authenticate('jwt', {session: false,})
 , (req, res) => {
-
->>>>>>> Stashed changes
+    req = req.body;
     const {errors, isValid} = validatePostInput(req.body);
 
     if(!isValid) {
@@ -87,83 +78,80 @@ router.post('/'
     const url = req.body.url;
     request(url, (error, resp, body) => {
         if (error) {
-           console.log(error);
+        //    console.log(error);
+           return res.status(404).json({invalidurl: 'URL is not valid'});
+            
         }
-        let $ =  cheerio.load(body);
-        let rawdata = fs.readFileSync(path.resolve(__dirname, "../IDF_score.json"));
-        let dict = JSON.parse(rawdata);
-        var tf = computeTF(req.body.text + req.body.text + $.text());
-        var headlinetext = url.toString()
-                                .replace('html', '')
-                                .split('/');
-                                
+        else
+        {
+            let $ =  cheerio.load(body);
+            let rawdata = fs.readFileSync(path.resolve(__dirname, "../IDF_score.json"));
+            let dict = JSON.parse(rawdata);
+            var tf = computeTF(req.body.text + req.body.text + $.text());
+            var headlinetext = url.toString()
+                                    .replace('html', '')
+                                    .split('/');
+                                    
 
-        headlinetext = headlinetext.reduce(function (a, b) { return a.length > b.length ? a : b; });
-        headlinetext = headlinetext
-            .substring(headlinetext.lastIndexOf('/'), headlinetext.length)
-            .replace(/\s+/g, " ")
-            .replace(/[^a-zA-Z0-9 ]/g, " ");
+            headlinetext = headlinetext.reduce(function (a, b) { return a.length > b.length ? a : b; });
+            headlinetext = headlinetext
+                .substring(headlinetext.lastIndexOf('/'), headlinetext.length)
+                .replace(/\s+/g, " ")
+                .replace(/[^a-zA-Z0-9 ]/g, " ");
 
-        // arrays of arrays format
-        tfidf_score = computeTFIDF(tf, dict);     // tfidf score in [tag, score] format
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-        console.log(tfidf_score.slice(0, 10));
->>>>>>> Stashed changes
-=======
-        console.log(tfidf_score.slice(0, 10));
->>>>>>> Stashed changes
-        // console.log('Tags above');
-        if(headlinetext == null || headlinetext.length<20)
-            headlinetext = url;
-        const newPost = new Post({
-            text: req.body.text,
-            url: req.body.url,
-            name: req.body.name,
-            headline: headlinetext,
-            avatar: req.body.avatar,
-            user: req.user.id,
-            handle: req.user.handle,
-            tags :  tfidf_score.slice(0, 10)
-        });
-        
-        // Separate storage for tags with scores
-        var pid = newPost.get( "_id" );
-        tfidf_score.slice(0, 10).forEach(element => {
-          var tag1 = new Tag({
-                tag: element[0],
-                postid: pid,
-                score: element[1] 
+            // arrays of arrays format
+            tfidf_score = computeTFIDF(tf, dict);     // tfidf score in [tag, score] format
+            // console.log(tfidf_score.slice(0, 10));
+            // console.log('Tags above');
+            if(headlinetext == null || headlinetext.length<20)
+                headlinetext = url;
+            const newPost = new Post({
+                text: req.body.text,
+                url: req.body.url,
+                name: req.body.name,
+                headline: headlinetext,
+                avatar: req.body.avatar,
+                user: req.user.id,
+                handle: req.user.handle,
+                tags :  tfidf_score.slice(0, 10)
+            });
+            
+            // Separate storage for tags with scores
+            var pid = newPost.get( "_id" );
+            tfidf_score.slice(0, 10).forEach(element => {
+            var tag1 = new Tag({
+                    tag: element[0],
+                    postid: pid,
+                    score: element[1] 
+                });
+
+                tag1.save().then((doc) => {
+                    // res.send(doc);
+                    // console.log(tag1.tag+'added');
+                    }, (e) => {
+                        res.status(400).send(e);
+                    });
             });
 
-            tag1.save().then((doc) => {
-                // res.send(doc);
-                console.log(tag1.tag+'added');
-                }, (e) => {
-                    res.status(400).send(e);
-                });
-        });
+
+            //newPost.save().then(post => res.json(post));
+            // const newTag = { tag: element[0],
+            //     postid: pid,
+            //     score: element[1] }
+            //  
+            //newPost.save().then(post => res.json(post));
+            
+            
+            newPost.save().then((doc) => {
+                res.send(doc);
+            }, (e) => {
+                res.status(400).send(e);
+            });
 
 
-        //newPost.save().then(post => res.json(post));
-        // const newTag = { tag: element[0],
-        //     postid: pid,
-        //     score: element[1] }
-        //  
-        //newPost.save().then(post => res.json(post));
-        
-        
-        newPost.save().then((doc) => {
-            res.send(doc);
-          }, (e) => {
-            res.status(400).send(e);
-        });
-
-
-        
+        }
+            
     }); 
-
 });
 
 
@@ -171,11 +159,17 @@ router.post('/'
 //@route        Delete api/posts/:id
 //@description  Delete Posts
 //@access       Private
-router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
-    Profile.findOne({user: req.user.id})
+router.delete('/:id'
+ 
+// ,passport.authenticate('jwt', {session: false})
+, (req, res) => {
+    params = req.params;
+    req = req.body;
+    
+    Profile.find({user: req.user.id})
         .then(profile => {
-            Post.findById(req.params.id)
-                .then(post => {
+            Post.findById(params.id)
+            .then(post => {
                     //check for the owner
                     if(post.user.toString() !== req.user.id) {
                         return res.status(401).json({notauthorised: 'User not authorised'});
@@ -196,18 +190,15 @@ router.post(
     '/like/:id',
     // passport.authenticate('jwt', { session: false }),
     (req, res) => {
-        //check for the owner
         params = req.params;
         req = req.body;
-        
-        if(req.user === null || req.user == undefined) {
+        //check for the owner
+        if(req.user === null) {
             return res.status(401).json({notauthorised: 'User not authorised'});
         }
-
-      Profile.findOne({ user: req.user.id }).then(profile => {
-        Post.findById(params.id)
-          .then(post => {
-            
+        Profile.findOne({ user: req.user.id }).then(profile => {
+            Post.findById(params.id)
+            .then(post => {
             //see if user is already present in likes array
             if (post.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
               return res.status(400).json({ alreadyliked: 'User already liked this post' });
@@ -237,14 +228,21 @@ router.post(
 //@route        POST api/posts/dislike/:id
 //@description  disLike Post
 //@access       Private
-router.post('/dislike/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/dislike/:id'
+// , passport.authenticate('jwt', {session: false})
+, (req, res) => {
+
+    params = req.params;
+    req = req.body;
+
+
     //check for the owner
     if(req.user === null) {
         return res.status(401).json({notauthorised: 'User not authorised'});
     }
     Profile.findOne({user: req.user.id})
         .then(profile => {
-            Post.findById(req.params.id)
+            Post.findById(params.id)
                 .then(post => {
 
                     //see if user has already present in dislikes array
@@ -269,7 +267,7 @@ router.post('/dislike/:id', passport.authenticate('jwt', {session: false}), (req
                     post.dislikes.unshift({ user: req.user.id });
                     //Save
                     post.save().then(post => res.json(post));
-                    console.log(post);
+                    // console.log(post);
                 })
                 .catch(err => res.status(404).json({postnotfound: 'No post found'}));
         }).catch(err => {console.log("Error"); res.status(400).json(err)});
@@ -278,7 +276,13 @@ router.post('/dislike/:id', passport.authenticate('jwt', {session: false}), (req
 //@route        POST api/posts/report/:id
 //@description  report Post
 //@access       Private
-router.post('/report/:id', passport.authenticate('jwt', {session: false}), (req, res) => {
+router.post('/report/:id'
+// , passport.authenticate('jwt', {session: false})
+,(req, res) => {
+
+    params = req.params;
+    req = req.body;
+    
     //check for the owner
     if(req.user === null) {
         return res.status(401).json({notauthorised: 'User not authorised'});
@@ -293,7 +297,7 @@ router.post('/report/:id', passport.authenticate('jwt', {session: false}), (req,
 
     Profile.findOne({user: req.user.id})
         .then(profile => {
-            Post.findById(req.params.id)
+            Post.findById(params.id)
                 .then(post => {
 
                     //see if user has already present in reports array
@@ -302,12 +306,11 @@ router.post('/report/:id', passport.authenticate('jwt', {session: false}), (req,
                       }
 
 
-
                     //add to the array if reports
                     post.reports.unshift({ user: req.user.id });
                     //Save
                     post.save().then(post => res.json(post));
-                    console.log(post);
+                    // console.log(post);
                 })
                 .catch(err => res.status(404).json({postnotfound: 'No post found'}));
         }).catch(err => {console.log("Error"); res.status(400).json(err)});
