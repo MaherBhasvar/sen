@@ -873,9 +873,18 @@ router.delete ('/comment/reply/:id/:comment_id/:reply_id', passport.authenticate
 });
 
 
-// //@route        POST api/posts/comment/like/:post_id/:comment_id
-// //@description  like to Comment 
-// //@access       Private
+
+
+
+
+
+
+
+
+
+//@route        POST api/posts/comment/like/:post_id/:comment_id
+//@description  like to Comment 
+//@access       Private
 
 // router.post ('/comment/like/:id/:comment_id', passport.authenticate('jwt', {session:false}), (req, res)=> {
 //     //check for the owner
@@ -891,7 +900,7 @@ router.delete ('/comment/reply/:id/:comment_id/:reply_id', passport.authenticate
 //             }
 
 //             //add like
-
+//             console.log(post.comments.find(comment => comment._id.toString() == req.params.comment_id.toString()).likes.push({req.user.id}))
 //             //Save
 //             post.save().then(post => res.json(post));
 //         })
