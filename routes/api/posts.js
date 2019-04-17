@@ -490,12 +490,12 @@ router.post('/report/:id', passport.authenticate('jwt', {session: false}), (req,
         return res.status(401).json({notauthorised: 'User not authorised'});
     }
 
-    if(req.user.isAdmin === false) {
-        return res.status(401).json({notauthorised: 'User not authorised'});
-    }
-    if(req.user.isModerator === false) {
-        return res.status(401).json({notauthorised: 'User not authorised'});
-    }
+    // if(req.user.isAdmin === false) {
+    //     return res.status(401).json({notauthorised: 'User not authorised'});
+    // }
+    // if(req.user.isModerator === false) {
+    //     return res.status(401).json({notauthorised: 'User not authorised'});
+    // }
 
     Profile.findOne({user: req.user.id})
         .then(profile => {
