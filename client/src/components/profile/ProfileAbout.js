@@ -35,8 +35,8 @@ class ProfileAbout extends Component {
               <span key={interest}>
                 {interest.split(' ').map(tag => (
                   <span key={tag}>
-                  <span className="badge badge-secondary"><a style={{ color: 'white' }} href= {'search/'+tag} class="text-decoration-none" >{tag}</a> </span> 
-                  <span className="badge badge-light" > </span>
+                  <span className="badge badge-secondary text-decoration-none"><a style={{ color: 'white' }} href= {'/search/'+tag}  >{tag}</a></span> 
+                  <span className="" > </span>
                   </span>
                 ))}
 

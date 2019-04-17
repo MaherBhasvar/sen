@@ -9,11 +9,11 @@ import TextFieldGroup from '../common/TextFieldGroup';
 class Register extends Component {
 
     state = {
-        name: 'test',
-        handle: 'test',
-        email: 'test5@test5.com',
-        password: 'test123',
-        password2:'test123',
+        name: '',
+        handle: '',
+        email: '',
+        password: '',
+        password2:'',
         errors: {},
     };
 
