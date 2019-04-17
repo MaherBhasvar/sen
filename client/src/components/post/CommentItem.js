@@ -46,8 +46,8 @@ onSubmit(e) {
               <button
                 onClick={this.onDeleteClick.bind(this, postId, comment._id)}
                 type="button"
-                className="btn btn-danger mr-1"
-              > Delete This Comment
+                className="btn btn-danger mr-3 "
+              > X
                 
               </button>
             ) : null}
