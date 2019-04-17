@@ -39,7 +39,7 @@ onSubmitReply(e) {
         {this.props.post.post.comments
           .find(comment => comment._id.toString() == this.state.commentId.toString())
           .reply.map( eachReply => (
-            <div class="alert alert-secondary">
+            <div className="alert alert-secondary" key={eachReply._id}>
               {eachReply.text}
             </div>
           ))}
@@ -72,7 +72,12 @@ onSubmitReply(e) {
           <div className="col-md-10">
           <div className = "card-text">
             <p className="lead">{comment.text}</p> 
-            <div className="badge badge-dark">Replies:</div>
+            <div >
+            <h3>
+              <span className="badge badge-dark">Replies:</span>
+              
+            </h3>
+            </div>
             <div>
               {showReplies}
               </div>
