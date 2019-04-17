@@ -39,7 +39,7 @@ class Post extends Component {
             <div className="col-md-12">
               {
                 this.props.search.searchData === '' ?
-                  (<Link to='/feed' className="btn btn-light mb-3">
+                  (<Link to='/feed' className="btn btn-light mb-3 mt-4">
                   Back To Feed
                   </Link>) :
                   (<Link to={`/search/${this.props.search.searchData}`} className="btn btn-light mb-3">

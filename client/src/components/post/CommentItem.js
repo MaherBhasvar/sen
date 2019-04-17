@@ -43,10 +43,10 @@ onDeleteReply(postId, commentId, replyId) {
         {this.props.post.post.comments
           .find(comment => comment._id.toString() == this.state.commentId.toString())
           .reply.map( eachReply => (
-            <div className="alert alert-secondary" key={eachReply._id}>
+            <div className="" key={eachReply._id}>
 
-              <div className="card mb-3" >
-                <div className="row no-gutters">
+              {/* <div className="card"  >
+                <div className="row">
 
                   <div className="col-md-8">
                     <div className="card-body">
@@ -56,12 +56,12 @@ onDeleteReply(postId, commentId, replyId) {
                     </div>
                   </div>
 
-                  <div className="col-md-3 mr-md-3">
+                  <div className="col-md-3 mr-md-2">
                     <div>
                     <button
                       onClick={this.onDeleteReply.bind(this, this.state.postId, this.state.commentId, eachReply._id)}
                       type="button"
-                      className="btn btn-danger mr-1"
+                      className="btn btn-danger mr-2"
                     > 
                       <i className="fas fa-times" />
                     </button>
@@ -69,7 +69,40 @@ onDeleteReply(postId, commentId, replyId) {
 
                   </div>
                 </div>
-              </div>
+              </div> */}
+
+<div className="card shadow mb-3 rounded offset-md-1">
+      <div className="card-header">
+      <div className="row">
+      <div className="col-md-10">
+          
+          <h5>  {eachReply.name} </h5>
+          
+          </div>
+          <div className="col-md-2">
+          <button
+                      onClick={this.onDeleteClick.bind(this, this.state.postId, this.state.commentId, eachReply._id)}
+                      type="button"
+                      className="btn btn-danger col-mr-2"
+                    > 
+                      <i className="fas fa-times" />
+                    </button>
+            </div>
+
+
+        </div>
+      </div>
+
+      <div className="card-body">
+          <div className="col-md-10">
+          <div className = "card-text">
+              <p className="card-text">{eachReply.text}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
 
             </div>
           ))}
@@ -80,16 +113,17 @@ onDeleteReply(postId, commentId, replyId) {
       <div className="card-header">
       <div className="row">
       <div className="col-md-11">
-            {comment.name}
+          <h4>{comment.name}</h4>  
           </div>
           <div className="col-md-1">
             {(comment.user === auth.user.id) || (auth.user.isAdmin === true) ? (
               <button
                 onClick={this.onDeleteClick.bind(this, postId, comment._id)}
                 type="button"
-                className="btn btn-danger mr-1"
+                className="btn btn-danger mr-"
               > 
-                <i className="fas fa-times" />
+               <i className="fas fa-times" />
+                
               </button>
             ) : null}
             </div>
@@ -103,10 +137,9 @@ onDeleteReply(postId, commentId, replyId) {
           <div className = "card-text">
             <p className="lead">{comment.text}</p> 
             <div >
-            <h3>
-              <span className="badge badge-dark">Replies:</span>
-              
-            </h3>
+            <h4>
+              <span className=" badge badge-info">Replies:</span>
+            </h4>
             </div>
             <div>
               {showReplies}

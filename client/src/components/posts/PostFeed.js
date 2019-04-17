@@ -124,8 +124,8 @@ class PostFeed extends Component {
           <span>
           
           <ButtonToolbar>
-          Sort: 
-          <span className="px-3 pb-3">
+          <span className="pt-2 mt-2">Sort:</span> 
+          <span className="px-3 pb-3 mt-2">
           
           <Dropdown>
             <Dropdown.Toggle variant="outline-primary" id="dropdown-basic" > 
@@ -140,7 +140,7 @@ class PostFeed extends Component {
           </Dropdown>
           </span>
           <span> </span>
-          <span>
+          <span className="mt-2">
           <Dropdown>
             <Dropdown.Toggle variant="outline-primary" id="dropdown-basic" > 
               {this.state.sortType2}

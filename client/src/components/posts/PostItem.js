@@ -90,13 +90,13 @@ class PostItem extends Component {
       <div className="card-header">
         <div className="row">
           <div className="col-md-9">
-            {post.handle}
+          <h5>  {post.handle} </h5>
           </div>
           <div className="col-md-3">
            {post.date} </div>
 
           </div>
-          </div>
+        </div>
       <div className="card-body">
       <div className="row">
           <div className="col-md-2">

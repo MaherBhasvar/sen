@@ -90,24 +90,35 @@ class CommentPostItem extends Component {
 //    this.countView(post);
 
     return (
-      <div className="card card-body mb-3">
+      <div className="card shadow rounded mb-3">
+        <div className="card-header mb-2">
+        <div className="row">
+          <div className="col-md-9">
+           <h4> {post.name} </h4>
+          </div>
+          </div>
+        </div>
         <div className="row">
           <div className="col-md-2">
             <a href="profile.html">
               <img
-                className="rounded-circle d-none d-md-block"
+                className="rounded-circle d-none d-md-block ml-1"
                 src={post.avatar}
                 alt=""
               />
             </a>
             <br />
-            <p className="text-center">{post.name}</p>
           </div>
-          <div className="col-md-10">
+          <div className="col-md-10 mb-3">
 
             <p className="lead">URL: <a href={post.url}>{post.headline}</a></p>
             <p className="lead">{post.text}</p>
-            
+            <p className="lead">Tags: {post.tags.map(tag => (
+              <span key={tag[0]}>
+              <span className="badge badge-secondary"><a style={{ color: 'white' }} href= {'../search/'+tag[0]} className="text-decoration-none" >{tag[0]}</a> </span> 
+              <span className="badge badge-light" > </span>
+              </span>
+            ))}</p>
             {showActions ? (
               <span>
                 <button
