@@ -115,7 +115,7 @@ class PostItem extends Component {
             <p className="lead">{post.text}</p>
             <p className="lead">Tags: {post.tags.map(tag => (
               <span key={tag[0]}>
-              <span className="badge badge-secondary" >{tag[0]} </span> 
+              <span className="badge badge-secondary"><a style={{ color: 'white' }} href= {'../search/'+tag[0]} class="text-decoration-none" >{tag[0]}</a> </span> 
               <span className="badge badge-light" > </span>
               </span>
             ))}</p>

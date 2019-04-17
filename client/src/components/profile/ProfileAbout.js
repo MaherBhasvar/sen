@@ -14,6 +14,7 @@ class ProfileAbout extends Component {
       <div key={index} className="p-3">
         <i className="fa fa-check" /> {interest}
       </div>
+      
     ));
 
     return (
@@ -30,11 +31,18 @@ class ProfileAbout extends Component {
             </p>
             <hr />
             <h3 className="text-center text-info">Interest Set</h3>
-            <div className="row">
-              <div className="d-flex flex-wrap justify-content-center align-items-center">
-                {interests}
-              </div>
-            </div>
+            <p className="lead">Interest: {profile.interests.map((interest, index) => (
+              <span key={interest}>
+                {interest.split(' ').map(tag => (
+                  <span key={tag}>
+                  <span className="badge badge-secondary"><a style={{ color: 'white' }} href= {'search/'+tag} class="text-decoration-none" >{tag}</a> </span> 
+                  <span className="badge badge-light" > </span>
+                  </span>
+                ))}
+
+              
+              </span>
+            ))}</p>
           </div>
         </div>
       </div>
