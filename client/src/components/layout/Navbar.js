@@ -97,7 +97,7 @@ class Navbar extends Component {
       const searchBar =  (      
       <li className="nav-item">
         <form onSubmit={e => this.onSubmit(e)}>
-          <div className="form-group">
+          <div className="form-inline my-4 my-lg-0">
           <TextFieldGroup 
             placeholder="Search"
             name="search"
@@ -114,7 +114,7 @@ class Navbar extends Component {
       </li>);
 
       const authLinks = (
-        <ul className="navbar-nav ml-auto">
+        <ul className="navbar-nav .ml-auto">
 
 
           <li className="nav-item">
@@ -156,12 +156,15 @@ class Navbar extends Component {
         </ul>
       );
         return (
-            <nav className="navbar navbar-expand-sm navbar-dark bg-dark mb-4">
-            <div className="container nav-item navbar-nav mr-auto ">
+            <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+            <div className="nav-item navbar-nav mr-auto ">
               <Link className="navbar-brand" to="/landing" onClick={(e) => {this.props.clearSearchTerm(); this.onEmptyState()}}>NewsLetter</Link>
               <Link className="nav-link" to="/profiles" onClick={(e) => {this.props.clearSearchTerm()}}> People</Link>
-              <Link className="nav-link" to="/feed" onClick={(e) => {this.props.clearSearchTerm(); this.onEmptyState()}}>Feed</Link>
+              <Link className="nav-link mr-sm-2" to="/feed" onClick={(e) => {this.props.clearSearchTerm(); this.onEmptyState()}}>Feed</Link>
               {searchBar} 
+              
+            </div>
+            <div className="nav-item navbar-nav ml-auto">
               <div className="collapse navbar-collapse" id="mobile-nav">
                 {/* <ul className="navbar-nav mr-auto">
                   <li className="nav-item">
@@ -180,6 +183,7 @@ class Navbar extends Component {
 
               </div>
             </div>
+            
           </nav>
         );
     }

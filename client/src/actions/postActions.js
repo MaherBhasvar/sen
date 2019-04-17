@@ -455,7 +455,7 @@ export const removeReportComment = () => dispatch => {
 
 }
 
-export const replyComment = (postId) => dispatch => {
+export const replyComment = (postId, replyData) => dispatch => {
   dispatch(clearErrors());
   axios
     .post(`/api/posts/comment/reply/${postId}`, commentData)

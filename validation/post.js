@@ -8,7 +8,7 @@ module.exports = function validatePostInput(data) {
     data.text = !isEmpty(data.text) ? data.text: '';
     data.url = !isEmpty(data.url) ? data.url: ''; 
 
-
+    console.log(data.text);
     if(Validator.isEmpty(data.text)) {
         errors.text = "Text field is Required";
     }

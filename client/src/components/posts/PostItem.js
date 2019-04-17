@@ -86,8 +86,19 @@ class PostItem extends Component {
     const { post, auth, showActions } = this.props;
 
     return (
-      <div className="card card-body mb-3">
+      <div className="card shadow mb-3 rounded">
+      <div className="card-header">
         <div className="row">
+          <div className="col-md-9">
+            {post.handle}
+          </div>
+          <div className="col-md-3">
+           {post.date} </div>
+
+          </div>
+          </div>
+      <div className="card-body">
+      <div className="row">
           <div className="col-md-2">
             <a href="profile.html">
               <img
@@ -97,8 +108,6 @@ class PostItem extends Component {
               />
             </a>
             <br />
-            <p className="text-center">{post.handle}</p>
-            <p className="text-center">{post.date}</p>
           </div>
           <div className="col-md-10">
 
@@ -106,7 +115,7 @@ class PostItem extends Component {
             <p className="lead">{post.text}</p>
             <p className="lead">Tags: {post.tags.map(tag => (
               <span key={tag[0]}>
-              <span className="badge badge-secondary" >{tag[0]} </span> 
+              <span className="badge badge-secondary"><a style={{ color: 'white' }} href= {'../search/'+tag[0]} class="text-decoration-none" >{tag[0]}</a> </span> 
               <span className="badge badge-light" > </span>
               </span>
             ))}</p>
@@ -171,6 +180,8 @@ class PostItem extends Component {
             ) : null}
           </div>
         </div>
+      </div>
+        
       </div>
     );
   }

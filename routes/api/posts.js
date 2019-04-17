@@ -229,7 +229,6 @@ router.post('/', passport.authenticate('jwt', {session: false,}), (req, res) => 
         if (error) {
            console.log(error);
         }
-        
         let $ =  cheerio.load(body);
         let rawdata = fs.readFileSync(path.resolve(__dirname, "../IDF_score.json"));
         let dict = JSON.parse(rawdata);
@@ -247,7 +246,6 @@ router.post('/', passport.authenticate('jwt', {session: false,}), (req, res) => 
 
         // arrays of arrays format
         tfidf_score = computeTFIDF(tf, dict);     // tfidf score in [tag, score] format
-        // console.log(tfidf_score.slice(0, 10));
         // console.log('Tags above');
 
         var uid = [];
