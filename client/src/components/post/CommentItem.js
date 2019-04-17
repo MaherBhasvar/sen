@@ -59,14 +59,14 @@ onDeleteReply(postId, commentId, replyId) {
                   <div className="col-md-3 mr-md-3">
                     <div>
                     <button
-                      onClick={this.onDeleteClick.bind(this, this.state.postId, this.state.commentId, eachReply._id)}
+                      onClick={this.onDeleteReply.bind(this, this.state.postId, this.state.commentId, eachReply._id)}
                       type="button"
                       className="btn btn-danger mr-1"
                     > 
                       <i className="fas fa-times" />
                     </button>
                     </div>
-                    
+
                   </div>
                 </div>
               </div>
@@ -85,7 +85,7 @@ onDeleteReply(postId, commentId, replyId) {
           <div className="col-md-1">
             {(comment.user === auth.user.id) || (auth.user.isAdmin === true) ? (
               <button
-                onClick={this.onDeleteReply.bind(this, postId, comment._id)}
+                onClick={this.onDeleteClick.bind(this, postId, comment._id)}
                 type="button"
                 className="btn btn-danger mr-1"
               > 

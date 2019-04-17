@@ -790,21 +790,54 @@ router.post ('/comment/reply/:id/:comment_id', passport.authenticate('jwt', {ses
     Post.findById(req.params.id)
         .then(post => {
             //check to see if comment exists
+            if(post.comments.filter(comment => comment._id.toString() === req.params.comment_id).reply.length === 0) {
+                return res.status(404).json({commentnotexists: 'Comment Does not exists'});
+            }
+
+                    console.log("params", req.params.comment_id)
+
+                    const removeIndex = post.comments
+                        .filter(comment => comment._id.toString() === req.params.comment_id)
+                        .reply
+                        .map(item => item._id.toString())
+                        .indexOf(req.params.reply_id);
+
+
+                    
+                    post.comments.find(comment => comment._id.toString() == req.params.comment_id.toString()).reply.splice(removeIndex,1);
+                    // Save
+                    post.save().then(post => res.json(post));
+
+        })
+        .catch(err =>res.status(404).json({postnotfound: 'No post found'}));
+});
+
+router.post ('/comment/reply/:id/:comment_id/:reply_id', passport.authenticate('jwt', {session:false}), (req, res)=> {
+    //check for the owner
+    console.log("inside reply", req.body)
+    if(req.user === null) {
+        return res.status(401).json({notauthorised: 'User not authorised'});
+    }
+
+    const { errors, isValid } = validateReplyInput(req.body);
+    
+    // Check Validation
+    if (!isValid) {
+    // If any errors, send 400 with errors object
+    return res.status(400).json(errors);
+    }
+
+    console.log("is valid", isValid, errors);
+
+    Post.findById(req.params.id)
+        .then(post => {
+            //check to see if comment exists
             if(post.comments.filter(comment => comment._id.toString() === req.params.comment_id).length === 0) {
                 return res.status(404).json({commentnotexists: 'Comment Does not exists'});
             }
-                    //find comment index
-                    // const commentIndex = post.comments
-                    //     .map(item => item._id.toString(req.param.id))
-                    //     .indexOf(req.params.comment_id);                   
-                    const newReply = {
-                        user: req.user.id,
-                        text: req.body.reply,
-                        name: req.user.name,
-                        avatar: req.user.avatar,
-                    };
-
-                    console.log("new Reply", newReply);
+            if(post.comments.find(comment => comment._id.toString() == req.params.comment_id.toString()).reply.filter(eachReply => eachReply._id.toString() === req.params.comment_id).length === 0) {
+                return res.status(404).json({replynotexists: 'Reply Does not exists'});
+            }
 
                     post.comments.map (comment => {
                         if (req.params.comment_id.toString() == comment._id.toString()){
@@ -876,23 +909,6 @@ router.post ('/comment/reply/:id/:comment_id', passport.authenticate('jwt', {ses
 //         })
 //         .catch(err =>res.status(404).json({postnotfound: 'No post found'}));
 // });
-
-var { Reply } = require('../../models/Reply.js');
-
-const submitReply = (req, res) => {
-    var reply = new Reply({
-      handle: req.body.handle,
-      commentID: req.params.cid,
-      text: req.body.text
-    });
-  
-    reply.save().then((doc) => {
-      res.send(doc);
-    }, (e) => {
-      res.status(400).send(e);
-    });
-  };
-  router.post('/:cid', submitReply);
 
 
 
