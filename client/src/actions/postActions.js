@@ -427,3 +427,48 @@ export const clearSearchTerm = () => dispatch => {
       payload: '',
     });
   };
+
+
+
+
+export const addLikeComment = () => dispatch => {
+
+}
+
+export const removeLikeComment = () => dispatch => {
+  
+}
+
+export const removeDislikeComment = () => dispatch => {
+  
+}
+
+export const addDislikeComment = () => dispatch => {
+  
+}
+
+export const addReportComment = () => dispatch => {
+  
+}
+
+export const removeReportComment = () => dispatch => {
+
+}
+
+export const replyComment = (postId) => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post(`/api/posts/comment/reply/${postId}`, commentData)
+    .then(res =>
+      dispatch({
+        type: GET_POST,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );  
+}

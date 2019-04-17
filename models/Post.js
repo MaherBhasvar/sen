@@ -86,6 +86,22 @@ const PostSchema = new Schema ({
                     }
                 }
             ],
+            likes: [
+                {
+                    user: {
+                        type: Schema.Types.ObjectId,
+                        ref: 'users'
+                    }
+                }
+            ],
+            dislikes: [
+                {
+                    user: {
+                        type: Schema.Types.ObjectId,
+                        ref: 'users'
+                    }
+                }
+            ],
             reply: [
                 {
                     user: {

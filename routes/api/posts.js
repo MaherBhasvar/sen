@@ -747,7 +747,7 @@ router.delete ('/comment/:id/:comment_id', passport.authenticate('jwt', {session
             }
 
             //check user is the owner
-            if(req.user === post) {
+            if(req.user.id === post.user.id) {
                 return res.status(401).json({notauthorised: 'User not authorised'});
             }
 
@@ -791,57 +791,72 @@ router.post ('/comment/reply/:id/:comment_id', passport.authenticate('jwt', {ses
         .catch(err =>res.status(404).json({postnotfound: 'No post found'}));
 });
 
-//@route        POST api/posts/comment/like/:id/:comment_id
-//@description  like to Comment 
-//@access       Private
+// //@route        POST api/posts/comment/like/:post_id/:comment_id
+// //@description  like to Comment 
+// //@access       Private
 
-router.post ('/comment/like/:id/:comment_id', passport.authenticate('jwt', {session:false}), (req, res)=> {
-    //check for the owner
-    if(req.user === null) {
-        return res.status(401).json({notauthorised: 'User not authorised'});
-    }
+// router.post ('/comment/like/:id/:comment_id', passport.authenticate('jwt', {session:false}), (req, res)=> {
+//     //check for the owner
+//     if(req.user === null) {
+//         return res.status(401).json({notauthorised: 'User not authorised'});
+//     }
 
-    Post.findById(req.params.id)
-        .then(post => {
-            //check to see if comment exists
-            if(post.comments.filter(comment => comment._id.toString() === req.params.comment_id).length === 0) {
-                return res.status(404).json({commentnotexists: 'Comment Does not exists'});
-            }
+//     Post.findById(req.params.id)
+//         .then(post => {
+//             //check to see if comment exists
+//             if(post.comments.filter(comment => comment._id.toString() === req.params.comment_id).length === 0) {
+//                 return res.status(404).json({commentnotexists: 'Comment Does not exists'});
+//             }
 
-            //add like
+//             //add like
 
-            //Save
-            post.save().then(post => res.json(post));
-        })
-        .catch(err =>res.status(404).json({postnotfound: 'No post found'}));
-});
-
-
-//@route        POST api/posts/comment/dislike/:id/:comment_id
-//@description  dislike to Comment Post
-//@access       Private
-
-router.post ('/comment/dislike/:id/:comment_id', passport.authenticate('jwt', {session:false}), (req, res)=> {
-    //check for the owner
-    if(req.user === null) {
-        return res.status(401).json({notauthorised: 'User not authorised'});
-    }
-
-    Post.findById(req.params.id)
-        .then(post => {
-            //check to see if comment exists
-            if(post.comments.filter(comment => comment._id.toString() === req.params.comment_id).length === 0) {
-                return res.status(404).json({commentnotexists: 'Comment Does not exists'});
-            }
-
-            //add dislike
-
-            //Save
-            post.save().then(post => res.json(post));
-        })
-        .catch(err =>res.status(404).json({postnotfound: 'No post found'}));
-});
+//             //Save
+//             post.save().then(post => res.json(post));
+//         })
+//         .catch(err =>res.status(404).json({postnotfound: 'No post found'}));
+// });
 
 
+// //@route        POST api/posts/comment/dislike/:id/:comment_id
+// //@description  dislike to Comment Post
+// //@access       Private
+
+// router.post ('/comment/dislike/:id/:comment_id', passport.authenticate('jwt', {session:false}), (req, res)=> {
+//     //check for the owner
+//     if(req.user === null) {
+//         return res.status(401).json({notauthorised: 'User not authorised'});
+//     }
+
+//     Post.findById(req.params.id)
+//         .then(post => {
+//             //check to see if comment exists
+//             if(post.comments.filter(comment => comment._id.toString() === req.params.comment_id).length === 0) {
+//                 return res.status(404).json({commentnotexists: 'Comment Does not exists'});
+//             }
+
+//             //add dislike
+
+//             //Save
+//             post.save().then(post => res.json(post));
+//         })
+//         .catch(err =>res.status(404).json({postnotfound: 'No post found'}));
+// });
+
+var { Reply } = require('../../models/Reply.js');
+
+const submitReply = (req, res) => {
+    var reply = new Reply({
+      handle: req.body.handle,
+      commentID: req.params.cid,
+      text: req.body.text
+    });
+  
+    reply.save().then((doc) => {
+      res.send(doc);
+    }, (e) => {
+      res.status(400).send(e);
+    });
+  };
+  router.post('/:cid', submitReply);
 
 module.exports = router;
