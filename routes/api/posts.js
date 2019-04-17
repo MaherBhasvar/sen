@@ -790,54 +790,21 @@ router.post ('/comment/reply/:id/:comment_id', passport.authenticate('jwt', {ses
     Post.findById(req.params.id)
         .then(post => {
             //check to see if comment exists
-            if(post.comments.filter(comment => comment._id.toString() === req.params.comment_id).reply.length === 0) {
-                return res.status(404).json({commentnotexists: 'Comment Does not exists'});
-            }
-
-                    console.log("params", req.params.comment_id)
-
-                    const removeIndex = post.comments
-                        .filter(comment => comment._id.toString() === req.params.comment_id)
-                        .reply
-                        .map(item => item._id.toString())
-                        .indexOf(req.params.reply_id);
-
-
-                    
-                    post.comments.find(comment => comment._id.toString() == req.params.comment_id.toString()).reply.splice(removeIndex,1);
-                    // Save
-                    post.save().then(post => res.json(post));
-
-        })
-        .catch(err =>res.status(404).json({postnotfound: 'No post found'}));
-});
-
-router.post ('/comment/reply/:id/:comment_id/:reply_id', passport.authenticate('jwt', {session:false}), (req, res)=> {
-    //check for the owner
-    console.log("inside reply", req.body)
-    if(req.user === null) {
-        return res.status(401).json({notauthorised: 'User not authorised'});
-    }
-
-    const { errors, isValid } = validateReplyInput(req.body);
-    
-    // Check Validation
-    if (!isValid) {
-    // If any errors, send 400 with errors object
-    return res.status(400).json(errors);
-    }
-
-    console.log("is valid", isValid, errors);
-
-    Post.findById(req.params.id)
-        .then(post => {
-            //check to see if comment exists
             if(post.comments.filter(comment => comment._id.toString() === req.params.comment_id).length === 0) {
                 return res.status(404).json({commentnotexists: 'Comment Does not exists'});
             }
-            if(post.comments.find(comment => comment._id.toString() == req.params.comment_id.toString()).reply.filter(eachReply => eachReply._id.toString() === req.params.comment_id).length === 0) {
-                return res.status(404).json({replynotexists: 'Reply Does not exists'});
-            }
+                    //find comment index
+                    // const commentIndex = post.comments
+                    //     .map(item => item._id.toString(req.param.id))
+                    //     .indexOf(req.params.comment_id);                   
+                    const newReply = {
+                        user: req.user.id,
+                        text: req.body.reply,
+                        name: req.user.name,
+                        avatar: req.user.avatar,
+                    };
+
+                    console.log("new Reply", newReply);
 
                     post.comments.map (comment => {
                         if (req.params.comment_id.toString() == comment._id.toString()){
@@ -858,6 +825,53 @@ router.post ('/comment/reply/:id/:comment_id/:reply_id', passport.authenticate('
         })
         .catch(err =>res.status(404).json({postnotfound: 'No post found'}));
 });
+
+
+
+
+
+
+//@route        Delete api/posts/comment/reply/:id/:comment_id
+//@description  Reply to Comment Post
+//@access       Private
+
+router.delete ('/comment/reply/:id/:comment_id/:reply_id', passport.authenticate('jwt', {session:false}), (req, res)=> {
+    //check for the owner
+    console.log("inside delete", req.params.reply_id)
+    console.log("inside reply", req.body)
+    if(req.user === null) {
+        return res.status(401).json({notauthorised: 'User not authorised'});
+    }
+
+
+    Post.findById(req.params.id)
+        .then(post => {
+            //check to see if comment exists
+            if(post.comments.filter(comment => comment._id.toString() === req.params.comment_id).length === 0) {
+                return res.status(404).json({commentnotexists: 'Comment Does not exists'});
+            }
+
+                    console.log("params", req.params.id, req.params.comment_id, req.params.reply_id)
+
+
+
+                    console.log(post.comments.find(comment => comment._id.toString() == req.params.comment_id.toString()).reply);
+                    //.reply.push(newReply)
+                    //Get remove index
+                    const removeIndex = post.comments.find(comment => comment._id.toString() == req.params.comment_id.toString()).reply
+                    .map(item => item._id.toString())
+                    .indexOf(req.params.reply_id);
+
+                    //Splice Comment out of array
+                    post.comments.find(comment => comment._id.toString() == req.params.comment_id.toString()).reply.splice(removeIndex,1);
+
+                    // Save
+                    post.save().then(post => res.json(post));
+
+        })
+        .catch(err =>res.status(404).json({postnotfound: 'No post found'}));
+});
+
 
 // //@route        POST api/posts/comment/like/:post_id/:comment_id
 // //@description  like to Comment 
