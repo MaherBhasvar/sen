@@ -145,7 +145,7 @@ class CommentPostItem extends Component {
                   />
                   <span className="badge badge-light">{post.dislikes.length}</span>
                 </button>
-                {auth.user.isAdmin || auth.user.isModerator ? (
+
                   
                     <button
                       onClick={this.onReportClick.bind(this, post)}
@@ -160,7 +160,7 @@ class CommentPostItem extends Component {
                       <span className="badge badge-light">{post.reports.length}</span>
                     </button>
                   
-                ) : null}
+
                 <i className="fas fa-eye"></i><span className="badge badge-light">{post.views}</span>
                     <a href="#text-area" className="btn btn-info mr-1"> Make a Comment <span className="badge badge-light">{post.comments.length}</span></a>
 

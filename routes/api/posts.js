@@ -16,7 +16,7 @@ const path = require("path");
 const Post = require('../../models/Post');
 const Profile = require('../../models/Profile');
 const Tag = require('../../models/Tag');
-const User = require('../../models/User')
+const User = require('../../models/User');
 //const Tag = require('../../models/Tag');
 
 //const Tag = mongoose.model('Tag');
@@ -28,6 +28,7 @@ var computeTFIDF = helper.computeTFIDF;
 
 const validatePostInput = require('../../validation/post');
 const validateCommentInput = require('../../validation/comment');
+const validateReplyInput = require('../../validation/reply');
 
 router.get('/test', (req, res) => res.json({msg: "Posts Works"}));
 
@@ -228,6 +229,7 @@ router.post('/', passport.authenticate('jwt', {session: false,}), (req, res) => 
     request(url, (error, resp, body) => {
         if (error) {
            console.log(error);
+           return res.status(404).json({error: "Error"})
         }
         let $ =  cheerio.load(body);
         let rawdata = fs.readFileSync(path.resolve(__dirname, "../IDF_score.json"));
@@ -275,7 +277,7 @@ router.post('/', passport.authenticate('jwt', {session: false,}), (req, res) => 
 
             tag1.save().then((doc) => {
                 // res.send(doc);
-                console.log(tag1.tag+'added');
+                //console.log(tag1.tag+'added');
                 }, (e) => {
                     res.status(400).send(e);
                 });
@@ -293,11 +295,11 @@ router.post('/', passport.authenticate('jwt', {session: false,}), (req, res) => 
                         //dispatch user update for notifications
                             User.find({handle : profile.handle})
                             .then(user => {
-                                console.log(profile);
-                                console.log(newPost);
-                                console.log(user);
-                                console.log(typeof user.notification);
-                                console.log(newPost.get( "_id" ));
+                                //console.log(profile);
+                                // console.log(newPost);
+                                // console.log(user);
+                                // console.log(typeof user.notification);
+                                // console.log(newPost.get( "_id" ));
 
                                 //const note = [];
 
@@ -490,12 +492,12 @@ router.post('/report/:id', passport.authenticate('jwt', {session: false}), (req,
         return res.status(401).json({notauthorised: 'User not authorised'});
     }
 
-    if(req.user.isAdmin === false) {
-        return res.status(401).json({notauthorised: 'User not authorised'});
-    }
-    if(req.user.isModerator === false) {
-        return res.status(401).json({notauthorised: 'User not authorised'});
-    }
+    // if(req.user.isAdmin === false) {
+    //     return res.status(401).json({notauthorised: 'User not authorised'});
+    // }
+    // if(req.user.isModerator === false) {
+    //     return res.status(401).json({notauthorised: 'User not authorised'});
+    // }
 
     Profile.findOne({user: req.user.id})
         .then(profile => {
@@ -770,9 +772,20 @@ router.delete ('/comment/:id/:comment_id', passport.authenticate('jwt', {session
 
 router.post ('/comment/reply/:id/:comment_id', passport.authenticate('jwt', {session:false}), (req, res)=> {
     //check for the owner
+    console.log("inside reply", req.body)
     if(req.user === null) {
         return res.status(401).json({notauthorised: 'User not authorised'});
     }
+
+    const { errors, isValid } = validateReplyInput(req.body);
+    
+    // Check Validation
+    if (!isValid) {
+    // If any errors, send 400 with errors object
+    return res.status(400).json(errors);
+    }
+
+    console.log("is valid", isValid, errors);
 
     Post.findById(req.params.id)
         .then(post => {
@@ -780,11 +793,35 @@ router.post ('/comment/reply/:id/:comment_id', passport.authenticate('jwt', {ses
             if(post.comments.filter(comment => comment._id.toString() === req.params.comment_id).length === 0) {
                 return res.status(404).json({commentnotexists: 'Comment Does not exists'});
             }
+                    //find comment index
+                    // const commentIndex = post.comments
+                    //     .map(item => item._id.toString(req.param.id))
+                    //     .indexOf(req.params.comment_id);                   
+                    const newReply = {
+                        user: req.user.id,
+                        text: req.body.reply,
+                        name: req.user.name,
+                        avatar: req.user.avatar,
+                    };
 
-            //add reply
+                    console.log("new Reply", newReply);
 
-            //Save
-            post.save().then(post => res.json(post));
+                    post.comments.map (comment => {
+                        if (req.params.comment_id.toString() == comment._id.toString()){
+                            console.log("true");
+                        }
+                    }
+                        );
+                    console.log("params", req.params.comment_id)
+
+
+
+                    console.log(post.comments.find(comment => comment._id.toString() == req.params.comment_id.toString()).reply.push(newReply))
+                    //.reply.push(newReply)
+            
+                    // Save
+                    post.save().then(post => res.json(post));
+
         })
         .catch(err =>res.status(404).json({postnotfound: 'No post found'}));
 });

@@ -455,11 +455,11 @@ export const removeReportComment = () => dispatch => {
 
 }
 
-export const replyComment = (postId, replyData) => dispatch => {
+export const replyComment = (postId, commentId, replyData) => dispatch => {
   dispatch(clearErrors());
   console.log("in reply comment",replyData);
   axios
-    .post(`/api/posts/comment/reply/${postId}`, replyData)
+    .post(`/api/posts/comment/reply/${postId}/${commentId}`, replyData)
     .then(res =>
       dispatch({
         type: GET_POST,
@@ -473,3 +473,23 @@ export const replyComment = (postId, replyData) => dispatch => {
       })
     );  
 }
+
+
+// Delete Comment
+export const deleteReplyComment = (postId, commentId, replyId) => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .delete(`/api/posts/comment/reply/${postId}/${commentId}/${replyId}`)
+    .then(res =>
+      dispatch({
+        type: GET_POST,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
