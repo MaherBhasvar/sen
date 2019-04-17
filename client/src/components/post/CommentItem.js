@@ -9,7 +9,7 @@ class CommentItem extends Component {
   state = {
     commentId: this.props.comment._id,
     postId: this.props.postId,
-    reply: 'thisisreply',
+    reply: '',
     errors: {},
 };
   onDeleteClick(postId, commentId) {
@@ -56,23 +56,27 @@ onSubmit(e) {
 
         </div>
       </div>
-      <form onSubmit={e => this.onSubmit(e)}>
-            <TextFieldGroup 
-                      placeholder="Name"
-                      name="reply"
-                      type="text"
-                      value={this.state.reply}
-                      onChange={e => this.onChange(e)}
-                      error={errors.reply}
-                    />
-                    <button type="submit" className="btn btn-dark">
-                Submit Reply
-              </button>
-            </form>
+
       <div class="card-body">
           <div className="col-md-10">
           <div className = "card-text">
             <p className="lead">{comment.text}</p> 
+            <div>
+              <form onSubmit={e => this.onSubmit(e)}>
+              <TextFieldGroup 
+                        placeholder="Name"
+                        name="reply"
+                        type="text"
+                        placeholder="Add a reply"
+                        value={this.state.reply}
+                        onChange={e => this.onChange(e)}
+                        error={errors.reply}
+                      />
+                      <button type="submit" className="btn btn-dark">
+                  Submit Reply
+                </button>
+              </form>
+            </div>
             </div>
           </div>
         </div>
