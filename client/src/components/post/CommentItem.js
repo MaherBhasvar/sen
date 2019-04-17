@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { deleteComment, replyComment } from '../../actions/postActions';
+import { deleteComment, replyComment, deleteReplyComment } from '../../actions/postActions';
 import TextFieldGroup from '../common/TextFieldGroup'
 
 class CommentItem extends Component {
@@ -28,7 +28,11 @@ onSubmitReply(e) {
     console.log(reply);
 
     this.props.replyComment(this.state.postId, this.state.commentId, reply);
+    this.setState({reply: ''});
+}
 
+onDeleteReply(postId, commentId, replyId) {
+  this.props.deleteReplyComment(postId, commentId, replyId);
 }
 
   render() {
@@ -40,7 +44,33 @@ onSubmitReply(e) {
           .find(comment => comment._id.toString() == this.state.commentId.toString())
           .reply.map( eachReply => (
             <div className="alert alert-secondary" key={eachReply._id}>
-              {eachReply.text}
+
+              <div className="card mb-3" >
+                <div className="row no-gutters">
+
+                  <div className="col-md-8">
+                    <div className="card-body">
+                      <h5 className="card-title">{eachReply.name}</h5>
+                      <p className="card-text">{eachReply.text}</p>
+                      <p className="card-text"><small className="text-muted"></small></p>
+                    </div>
+                  </div>
+
+                  <div className="col-md-3 mr-md-3">
+                    <div>
+                    <button
+                      onClick={this.onDeleteClick.bind(this, this.state.postId, this.state.commentId, eachReply._id)}
+                      type="button"
+                      className="btn btn-danger mr-1"
+                    > 
+                      <i className="fas fa-times" />
+                    </button>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+
             </div>
           ))}
       </div>
@@ -55,7 +85,7 @@ onSubmitReply(e) {
           <div className="col-md-1">
             {(comment.user === auth.user.id) || (auth.user.isAdmin === true) ? (
               <button
-                onClick={this.onDeleteClick.bind(this, postId, comment._id)}
+                onClick={this.onDeleteReply.bind(this, postId, comment._id)}
                 type="button"
                 className="btn btn-danger mr-1"
               > 
@@ -119,5 +149,5 @@ const mapStateToProps = state => ({
   post: state.post,
 });
 
-export default connect(mapStateToProps, { deleteComment, replyComment })(CommentItem);
+export default connect(mapStateToProps, { deleteComment, replyComment, deleteReplyComment })(CommentItem);
 

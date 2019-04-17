@@ -229,6 +229,7 @@ router.post('/', passport.authenticate('jwt', {session: false,}), (req, res) => 
     request(url, (error, resp, body) => {
         if (error) {
            console.log(error);
+           return res.status(404).json({error: "Error"})
         }
         let $ =  cheerio.load(body);
         let rawdata = fs.readFileSync(path.resolve(__dirname, "../IDF_score.json"));
