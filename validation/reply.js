@@ -5,11 +5,11 @@ module.exports = function validateReplyInput(data) {
     let errors = {};
  
 
-    data.text = !isEmpty(data.text) ? data.text: '';
+    data.reply = !isEmpty(data.reply) ? data.reply: '';
 
 
-    if(Validator.isEmpty(data.text)) {
-        errors.text = "Text field is Required";
+    if(Validator.isEmpty(data.reply)) {
+        errors.reply = "reply field is Required";
     }
 
     return {

@@ -16,24 +16,35 @@ class CommentItem extends Component {
     this.props.deleteComment(postId, commentId);
   }
 
-  onChange(e) {
+  onChangeReply(e) {
     this.setState({[e.target.name]: e.target.value});
   }
 
-onSubmit(e) {
+onSubmitReply(e) {
     e.preventDefault();
     const reply = {
         ...this.state,
     }
     console.log(reply);
 
-    this.props.replyComment(reply);
+    this.props.replyComment(this.state.postId, this.state.commentId, reply);
 
 }
 
   render() {
     const { comment, postId, auth } = this.props;
     const {errors} = this.props;
+    const showReplies = (
+      <div>
+        {this.props.post.post.comments
+          .find(comment => comment._id.toString() == this.state.commentId.toString())
+          .reply.map( eachReply => (
+            <div class="alert alert-secondary">
+              {eachReply.text}
+            </div>
+          ))}
+      </div>
+    )
     return (
       <div className="card shadow mb-3 rounded">
       <div className="card-header">
@@ -47,8 +58,8 @@ onSubmit(e) {
                 onClick={this.onDeleteClick.bind(this, postId, comment._id)}
                 type="button"
                 className="btn btn-danger mr-1"
-              > Delete This Comment
-                
+              > 
+                <i className="fas fa-times" />
               </button>
             ) : null}
             </div>
@@ -57,19 +68,23 @@ onSubmit(e) {
         </div>
       </div>
 
-      <div class="card-body">
+      <div className="card-body">
           <div className="col-md-10">
           <div className = "card-text">
             <p className="lead">{comment.text}</p> 
+            <div className="badge badge-dark">Replies:</div>
             <div>
-              <form onSubmit={e => this.onSubmit(e)}>
+              {showReplies}
+              </div>
+            <div>
+              <form onSubmit={e => this.onSubmitReply(e)}>
               <TextFieldGroup 
                         placeholder="Name"
                         name="reply"
                         type="text"
                         placeholder="Add a reply"
                         value={this.state.reply}
-                        onChange={e => this.onChange(e)}
+                        onChange={e => this.onChangeReply(e)}
                         error={errors.reply}
                       />
                       <button type="submit" className="btn btn-dark">
@@ -86,6 +101,7 @@ onSubmit(e) {
 }
 
 CommentItem.propTypes = {
+  replyComment: PropTypes.func.isRequired,
   deleteComment: PropTypes.func.isRequired,
   comment: PropTypes.object.isRequired,
   postId: PropTypes.string.isRequired,
@@ -94,7 +110,8 @@ CommentItem.propTypes = {
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  errors: state.errors
+  errors: state.errors,
+  post: state.post,
 });
 
 export default connect(mapStateToProps, { deleteComment, replyComment })(CommentItem);
