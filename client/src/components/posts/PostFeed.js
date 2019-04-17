@@ -124,7 +124,7 @@ class PostFeed extends Component {
           <span>
           
           <ButtonToolbar>
-          Sort: 
+          <span className="pt-2">Sort:</span> 
           <span className="px-3 pb-3">
           
           <Dropdown>
