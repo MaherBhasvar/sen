@@ -81,7 +81,7 @@ onDeleteReply(postId, commentId, replyId) {
           </div>
           <div className="col-md-2">
           <button
-                      onClick={this.onDeleteClick.bind(this, this.state.postId, this.state.commentId, eachReply._id)}
+                      onClick={this.onDeleteReply.bind(this, this.state.postId, this.state.commentId, eachReply._id)}
                       type="button"
                       className="btn btn-danger col-mr-2"
                     > 
@@ -169,6 +169,7 @@ onDeleteReply(postId, commentId, replyId) {
 }
 
 CommentItem.propTypes = {
+  deleteReplyComment: PropTypes.func.isRequired,
   replyComment: PropTypes.func.isRequired,
   deleteComment: PropTypes.func.isRequired,
   comment: PropTypes.object.isRequired,
