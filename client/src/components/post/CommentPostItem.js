@@ -94,7 +94,7 @@ class CommentPostItem extends Component {
         <div className="card-header mb-2">
         <div className="row">
           <div className="col-md-9">
-            {post.name}
+           <h4> {post.name} </h4>
           </div>
           </div>
         </div>
