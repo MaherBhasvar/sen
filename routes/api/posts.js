@@ -857,9 +857,6 @@ const submitReply = (req, res) => {
   };
   router.post('/:cid', submitReply);
 
-router.post('/comment/reply/id',  passport.authenticate('jwt', {session:false}), (req,res) => {
-    
-})
 
 
 
