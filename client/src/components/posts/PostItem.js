@@ -96,7 +96,7 @@ class PostItem extends Component {
            {post.date} </div>
 
           </div>
-          </div>
+        </div>
       <div className="card-body">
       <div className="row">
           <div className="col-md-2">
