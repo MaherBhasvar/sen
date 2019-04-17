@@ -121,7 +121,7 @@ class PostFeed extends Component {
       );
     }
       return (
-          <span>
+          <span mt-2>
           
           <ButtonToolbar>
           <span className="pt-2">Sort:</span> 
