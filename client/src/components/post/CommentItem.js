@@ -109,6 +109,7 @@ onDeleteReply(postId, commentId, replyId) {
       </div>
     )
     return (
+
       <div className="card shadow mb-3 rounded">
       <div className="card-header">
       <div className="row">
@@ -136,10 +137,10 @@ onDeleteReply(postId, commentId, replyId) {
           <div className="col-md-10">
           <div className = "card-text">
             <p className="lead">{comment.text}</p> 
-            <div >
-            <h4>
-              <span className=" badge badge-info">Replies:</span>
-            </h4>
+            <div className="mb-2" >
+            
+              <span className=" badge badge-secondary"><h6>Replies:</h6></span>
+            
             </div>
             <div>
               {showReplies}
@@ -164,7 +165,7 @@ onDeleteReply(postId, commentId, replyId) {
           </div>
         </div>
       </div>
-    );
+);
   }
 }
 

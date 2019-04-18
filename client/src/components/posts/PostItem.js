@@ -128,7 +128,7 @@ class PostItem extends Component {
                   className="btn btn-light mr-1"
                 >
                   <i
-                    className={classnames('fas fa-thumbs-up', {
+                    className={classnames('fa fa-icon fa-chevron-up', {
                       'text-info': this.findUserLike(post.likes)
                     })}
                   />
@@ -140,7 +140,7 @@ class PostItem extends Component {
                   className="btn btn-light mr-1"
                 >
                   <i 
-                  className={classnames('fas fa-thumbs-down', {
+                  className={classnames('fa fa-icon fa-chevron-down', {
                     'text-info': this.findUserDislike(post.dislikes)
                   })}
                   />
@@ -161,7 +161,7 @@ class PostItem extends Component {
                     </button>
        
               
-                <i className="fas fa-eye"></i><span className="badge badge-light">{post.views}</span>
+                <i className="fas fa-eye ml-1 mr-1"></i><span className="badge badge-light">{post.views}</span>
                     <Link to={`/post/${post._id}`} className="btn btn-info mr-1" onClick={(e) => {this.props.addViewCount(post._id);}}>
                     Make a Comment <span className="badge badge-light">{post.comments.length}</span>
                     </Link>
