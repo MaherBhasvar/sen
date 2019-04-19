@@ -371,7 +371,8 @@ router.delete('/:id', passport.authenticate('jwt', {session: false}), (req, res)
             Post.findById(req.params.id)
                 .then(post => {
                     //check for the owner
-                    if((post.user.toString() !== req.user.id) || (req.user.isAdmin === true)) {
+                    console.log(req.user);
+                    if((post.user.toString() !== req.user.id) && (req.user.isAdmin.toString() === "false")) {
                         return res.status(401).json({notauthorised: 'User not authorised'});
                     }
 
