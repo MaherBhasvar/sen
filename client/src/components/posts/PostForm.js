@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import {withRouter} from 'react-router-dom';
 import TextAreaFieldGroup from '../common/TextAreaFieldGroup';
 import TextFieldGroup from '../common/TextFieldGroup';
 
@@ -28,6 +29,9 @@ class PostForm extends Component {
 
   onSubmit(e) {
     e.preventDefault();
+    if(!this.props.auth.isAuthenticated) {
+      this.props.history.push('/landing');
+    }
 
     const { user } = this.props.auth;
 
@@ -98,4 +102,4 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(mapStateToProps, { addPost })(PostForm);
+export default connect(mapStateToProps, { addPost })(withRouter(PostForm));

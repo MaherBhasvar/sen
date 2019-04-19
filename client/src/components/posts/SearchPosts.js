@@ -53,10 +53,10 @@ class SearchPosts extends Component {
     if(errors.search || errors.nopostsfound) {
         console.log('Errors in search');
         console.log(errors.search);
-        postContent = (<h1>{errors.search || errors.nopostsfound}</h1>);
+        postContent = (<h1>{errors.search || errors.nopostsfound} Search Term "{this.props.match.params.id}"</h1>);
     } else {
         if(errors.search || errors.nopostsfound) {
-          postContent = (<h1>{errors.search || errors.nopostsfound}</h1>);
+          postContent = (<h1>{errors.search || errors.nopostsfound} Search Term "{this.props.match.params.id}"</h1>);
 
         } else if (posts === null || loading) {
             postContent = <Spinner />;
@@ -65,7 +65,13 @@ class SearchPosts extends Component {
           }
     }
     if (this.state.errors.search || this.state.errors.nopostsfound) {
-      postContent = (<h1>{this.state.errors.search || this.state.errors.nopostsfound}</h1>);
+      postContent = (
+        <div>
+          <h1>{this.state.errors.search || this.state.errors.nopostsfound} 
+          </h1>
+          <h3>Search Term "{this.props.match.params.id}"</h3>
+        </div>
+        );
     }
 
 

@@ -44,9 +44,6 @@ class CommentForm extends Component {
   }
 
   onChange(e) {
-    if(!this.props.auth.isAuthenticated) {
-      this.props.history.push('/landing');
-    }
     this.setState({ [e.target.name]: e.target.value });
   }
 

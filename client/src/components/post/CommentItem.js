@@ -22,6 +22,9 @@ class CommentItem extends Component {
 
 onSubmitReply(e) {
     e.preventDefault();
+    if(!this.props.auth.isAuthenticated) {
+      this.props.history.push('/landing');
+    }
     const reply = {
         ...this.state,
     }
