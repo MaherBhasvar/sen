@@ -1,4 +1,6 @@
 # sen
+You can see how this app works on this link: https://www.youtube.com/watch?v=V3W-CaxW7qc
+
 First install npm, node and create-react-app
 
 setup mongodb from config/keys.js
